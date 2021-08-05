@@ -1,0 +1,2 @@
+# Templates
+The templates directory.

@@ -1,0 +1,5 @@
+import { Identifier } from 'domeniere';
+
+export interface __NAME__Interface extends Identifier {
+    
+}

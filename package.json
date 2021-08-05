@@ -1,0 +1,31 @@
+{
+  "name": "domeniere-cli",
+  "version": "1.0.0",
+  "description": "A command-line interface for the Domeniere library",
+  "main": "dist/cli.js",
+  "repository": "https://github.com/Perivel/domeniere-cli",
+  "author": "Patrick Luy <pluy@perivel.com>",
+  "license": "MIT",
+  "dependencies": {
+    "chalk": "^4.1.2",
+    "change-case": "^4.1.2",
+    "clipanion": "^3.0.1",
+    "enquirer": "^2.3.6",
+    "ora": "^5.4.1",
+    "promisify-child-process": "^4.1.1",
+    "typanion": "^3.3.2"
+  },
+  "devDependencies": {
+    "@types/node": "^16.4.9",
+    "copyfiles": "^2.4.1",
+    "rimraf": "^3.0.2"
+  },
+  "scripts": {
+    "build": "yarn clean && tsc && yarn copy-templates",
+    "clean": "rimraf ./dist",
+    "copy-templates": "copyfiles -u 1 templates/**/*.txt dist/templates"
+  },
+  "bin": {
+    "domeniere": "./dist/cli.js"
+  }
+}

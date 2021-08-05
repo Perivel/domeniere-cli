@@ -1,0 +1,8 @@
+import { AbstractFactory } from 'domeniere';
+
+export class __FACTORY_NAME__Factory extends Factory {
+    
+    constructor() {
+        super();
+    }
+}

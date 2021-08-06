@@ -11,6 +11,7 @@ import {
 import { 
     generateAggregateContents,
     generateApiFileContents, 
+    generateCommandContents, 
     generateDomConfigFileContents, 
     generateEntityContents, 
     generateEventStoreFileContents,
@@ -168,6 +169,48 @@ export const apiFilePath = (domainName: string, rootDir: string): string => {
 }
 
 /**
+ * commandClassPath()
+ * 
+ * gets the path to the class file of the specified command name, in the specified module.
+ * @param commandName the commandy name
+ * @param module the module name.
+ * @param rootDir the root directory of the project.
+ * @returns the class path.
+ */
+
+export const commandClassPath = (commandName: string, module: string, rootDir: string): string => {
+    return Path.resolve(commandDirectoryPath(commandName, module, rootDir), `${formatDirectoryOrFileName(commandName)}.command.ts`);
+}
+
+/**
+ * commandDirectoryPath()
+ * 
+ * gets the path to the command directory for the specified command and module.
+ * @param commandName the command name
+ * @param module the module name
+ * @param rootDir the root project directory.
+ * @returns the path to the repository directory.
+ */
+
+export const commandDirectoryPath = (commandName: string, module: string, rootDir: string): string => {
+    return Path.resolve(servicesDirectoryPath(module, rootDir), `${formatDirectoryOrFileName(commandName)}-command`);
+}
+
+/**
+ * commandExists()
+ * 
+ * determines if the specified command exists in the specified module.
+ * @param commandName the command name
+ * @param moduleName the module name
+ * @param rootDir the root directory.
+ * @returns 
+ */
+
+export const commandExists = async (commandName: string, moduleName: string, rootDir: string): Promise<boolean> => {
+    return await pathExists(commandDirectoryPath(commandName, moduleName, rootDir));
+}
+
+/**
  * createAggregate()
  * 
  * creates an aggregate.
@@ -245,6 +288,47 @@ export const apiFilePath = (domainName: string, rootDir: string): string => {
     else {
         // The directory already exists.
         throw new Error(`Aggregates directory for module ${formatClassName(moduleName)} already exists.`);
+    }
+}
+
+/**
+ * createCommand()
+ * 
+ * creates an factory.
+ * @param commandName the command name.
+ * @param moduleName the module name.
+ * @param rootDir the root directory.
+ * @param identity indicates whether the repository is an identity generating repository.
+ */
+
+export const createCommand = async (commandName: string, moduleName: string, rootDir: string, identity: boolean = false): Promise<void> => {
+    // make sure the module and services directories exists.
+    if (await moduleExists(moduleName, rootDir) && await servicesDirectoryExists(moduleName, rootDir)) {
+        // load the command contents
+        const commandClassContent = await generateCommandContents(commandName);
+        const commandDirPath = commandDirectoryPath(commandName, moduleName, rootDir);
+        const commandClassFilePath = commandClassPath(commandName, moduleName, rootDir);
+
+        // create the directory.
+        await makeDirectory(commandDirPath);
+
+        // create the files.
+        try {
+            await writeFile(commandClassFilePath, commandClassContent);
+        }
+        catch (e) {
+            // failed to write files. Undo the operation.
+            await destroyDirectory(commandDirPath, {
+                recursive: true,
+                force: true,
+            });
+
+            return e;
+        }
+
+    }
+    else {
+        throw new Error('Module or Entities directory not found.');
     }
 }
 
@@ -526,6 +610,44 @@ export const createRepository = async (repositoryName: string, moduleName: strin
     }
 }
 
+/**
+ * createServicesDirectoryForModule()
+ * 
+ * creates a services directory for the specified module.
+ * @param moduleName the module name
+ * @param rootDir the root directory.
+ */
+
+export const createServicesDirectoryForModule = async (moduleName: string, rootDir: string): Promise<void> => {
+    if (!await servicesDirectoryExists(moduleName, rootDir)) {
+        // prepare the directory information.
+        const servicesDirectoryPathToCreate = servicesDirectoryPath(moduleName, rootDir);
+        const servicesWellFilePathToCreate = servicesWellFilePath(moduleName, rootDir);
+        const wellFileContents = await generateWellFileContents('services');
+
+        // write directory.
+        await makeDirectory(servicesDirectoryPathToCreate);
+
+        try {
+            // write well file
+            await writeFile(servicesWellFilePathToCreate, wellFileContents);
+        }
+        catch (e) {
+            // failed to create the well file.
+            await destroyDirectory(servicesDirectoryPathToCreate, {
+                recursive: true,
+                force: true,
+            });
+            throw e;
+        }
+    }
+    else {
+        // The directory already exists.
+        throw new Error(`Services directory for module ${formatClassName(moduleName)} already exists.`);
+    }
+}
+
+
 
 /**
  * createValuesDirectoryForModule()
@@ -791,6 +913,30 @@ export const entitiesWellFilePath = (moduleName: string, rootDir: string): strin
 }
 
 /**
+ * exposeCommand()
+ * 
+ * adds the specified command to the module's well file.
+ * @param commandName the name of the repository to export.
+ * @param moduleName the module where the value resides.
+ * @param rootDir the project root directory.
+ */
+
+export const exposeCommand = async (commandName: string, moduleName: string, rootDir: string): Promise<void> => {
+    if (await moduleExists(moduleName, rootDir) && await servicesWellFileExists(moduleName, rootDir) && await commandExists(commandName, moduleName, rootDir)) {
+        // data
+        const wellFilePath = servicesWellFilePath(moduleName, rootDir);
+        const patherizedCommandName = formatDirectoryOrFileName(commandName);
+        const exportLine = `\nexport * from './${patherizedCommandName}-command/${patherizedCommandName}.command';`;
+
+        // append the module file.
+        await appendFile(wellFilePath, exportLine);
+    }
+    else {
+        throw new Error('Could not find module or command directory.');
+    }
+}
+
+/**
  * exposeEntitiesWell()
  * 
  * exposes the entities well to the module.
@@ -953,6 +1099,29 @@ export const exposeRepository = async (repositoryName: string, moduleName: strin
     }
     else {
         throw new Error('Could not find module or repositories directory.');
+    }
+}
+
+/**
+ * exposeServicesWell()
+ * 
+ * exposes the services well to the module.
+ * @param moduleName the name of the module who's 
+ * @param rootDir the project root directory.
+ */
+
+export const exposeServicesWell = async (moduleName: string, rootDir: string): Promise<void> => {
+
+    if (await moduleExists(moduleName, rootDir) && await servicesWellFileExists(moduleName, rootDir)) {
+        // module data
+        const modulePath = moduleFilePath(moduleName, rootDir);
+        const exportLine = `\nexport * from './services/services.well';`;
+
+        // append the module file.
+        await appendFile(modulePath, exportLine);
+    }
+    else {
+        throw new Error('Could not find module or Services directory.');
     }
 }
 
@@ -1297,19 +1466,6 @@ export const repositoriesDirectoryPath = (moduleName: string, rootDir: string): 
 }
 
 /**
- * repositoriesDirectoryPath()
- * 
- * gets the path to the repositories directory for the specified module.
- * @param moduleName the module to search in.
- * @param rootDir the root directory.
- * @returns the path to the factories directory for that module.
- */
-
-export const rep0sitoriesDirectoryPath = (moduleName: string, rootDir: string): string => {
-    return Path.resolve(srcDirectoryPath(rootDir), formatDirectoryOrFileName(moduleName), 'repositories');
-}
-
-/**
  * repositoriesWellFileExists()
  * 
  * determines if the repositories well exists for the specified module.
@@ -1460,6 +1616,61 @@ export const scaffoldDomainDirectory = async (domainName: string, description: s
         });
         throw e;
     }
+}
+
+/**
+ * servicesDirectoryExists()
+ * 
+ * determines if the services directory for the specified module exists.
+ * @param moduleName moduleName
+ * @param rootDir the root directory.
+ * @returns TRUE if the values directory exists for the specified module. FALSE otherwise.
+ */
+
+export const servicesDirectoryExists = async (moduleName: string, rootDir: string): Promise<boolean> => {
+    const dirPath = servicesWellFilePath(moduleName, rootDir);
+    return await pathExists(dirPath);
+}
+
+
+
+/**
+ * servicesDirectoryPath()
+ * 
+ * gets the path to the services directory for the specified module.
+ * @param moduleName the module to search in.
+ * @param rootDir the root directory.
+ * @returns the path to the factories directory for that module.
+ */
+
+export const servicesDirectoryPath = (moduleName: string, rootDir: string): string => {
+    return Path.resolve(srcDirectoryPath(rootDir), formatDirectoryOrFileName(moduleName), 'services');
+}
+
+/**
+ * servicesWellFileExists()
+ * 
+ * determines if the services well exists for the specified module.
+ * @param moduleName the name of the module to test.
+ * @param rootDir the root project directory.
+ * @returns TRUE if the values well exists. FALSE otehrwise.
+ */
+
+export const servicesWellFileExists = async (moduleName: string, rootDir: string): Promise<boolean> => {
+    const dirPath = servicesWellFilePath(moduleName, rootDir);
+    return await pathExists(dirPath);
+}
+
+/**
+ * servicesWellFilePath()
+ * 
+ * gets the path for the services well.
+ * @param moduleName the name of the module.
+ * @param rootDir the root directory of the domeniere project.
+ */
+
+export const servicesWellFilePath = (moduleName: string, rootDir: string): string => {
+    return Path.resolve(servicesDirectoryPath(moduleName, rootDir), 'services.well.ts');
 }
 
 /**

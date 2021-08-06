@@ -24,6 +24,7 @@ const FACTORY_PATH = Path.resolve(__dirname, `..${Path.sep}..${Path.sep}`, 'temp
 const REPOSITORY_INTERFACE_PATH = Path.resolve(__dirname, `..${Path.sep}..${Path.sep}`, 'templates', 'REPOSITORY_INTERFACE.template.txt');
 const REPOSITORY_PATH = Path.resolve(__dirname, `..${Path.sep}..${Path.sep}`, 'templates', 'REPOSITORY.template.txt');
 const IDENTITY_REPOSITORY_PATH = Path.resolve(__dirname, `..${Path.sep}..${Path.sep}`, 'templates', 'IDENTITY_REPOSITORY.template.txt');
+const COMMAND_PATH = Path.resolve(__dirname, `..${Path.sep}..${Path.sep}`, 'templates', 'COMMAND.template.txt');
 
 /**
  * generateAggregateContents()
@@ -60,6 +61,20 @@ export const generateApiFileContents = async (domainName: string): Promise<strin
     return baseTemplate.toString()
         .replace(/__DOMAIN_NAME__/g, apiName)
         .replace(/__DOMAIN_PATH__/g, apiPath);
+}
+
+/**
+ * generateCommandContents()
+ * 
+ * generates the command class contents with the specified name.
+ * @param name the name of the command class.
+ * @returns the value class contents.
+ */
+
+export const generateCommandContents = async (name: string): Promise<string> => {
+    const template = await readFile(COMMAND_PATH);
+    return template.toString()
+        .replace(/__COMMAND_NAME__/g, formatClassName(name));
 }
 
 /**

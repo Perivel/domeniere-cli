@@ -93,7 +93,7 @@ export class ScaffoldRepositoryCommand extends Command {
 
             // make sure the repository does not already exist
             if (await repositoryExists(this.repositoryName, this.module, process.cwd())) {
-                throw new Error(`Repository ${formatClassName(this.repositoryName)} already exists in module ${formatClassName(this.module)}`);
+                throw new Error(`Repository ${formatClassName(this.repositoryName)}Repository already exists in module ${formatClassName(this.module)}`);
             }
             stopSpinnerWithSuccess(formatLogInfo('Validation complete.'))
         }

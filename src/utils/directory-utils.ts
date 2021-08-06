@@ -14,6 +14,7 @@ import {
     generateCommandContents, 
     generateDomConfigFileContents, 
     generateEntityContents, 
+    generateEventContents, 
     generateEventStoreFileContents,
     generateFactoryContents,
     generateFactoryInterfaceContents,
@@ -378,6 +379,47 @@ export const createEntity = async (entityName: string, moduleName: string, rootD
 }
 
 /**
+ * createEvent()
+ * 
+ * creates an event.
+ * @param eventName the event name.
+ * @param moduleName the module name.
+ * @param rootDir the root directory.
+ * @param broadcastEvent a flag to indicate whether the event should be broadcasted
+ */
+
+export const createEvent = async (eventName: string, moduleName: string, rootDir: string, broadcastEvent: boolean = false): Promise<void> => {
+    // make sure the module and events directories exists.
+    if (await moduleExists(moduleName, rootDir) && await eventsDirectoryExists(moduleName, rootDir)) {
+        // load the entity contents
+        const eventClassContent = await generateEventContents(eventName, rootDir, broadcastEvent);
+        const eventDirPath = eventDirectoryPath(eventName, moduleName, rootDir);
+        const eventClassFilePath = eventClassPath(eventName, moduleName, rootDir);
+
+        // create the directory.
+        await makeDirectory(eventDirPath);
+
+        // create the files.
+        try {
+            await writeFile(eventClassFilePath, eventClassContent);
+        }
+        catch (e) {
+            // failed to write files. Undo the operation.
+            await destroyDirectory(eventDirPath, {
+                recursive: true,
+                force: true,
+            });
+
+            return e;
+        }
+
+    }
+    else {
+        throw new Error('Module or Events directory not found.');
+    }
+}
+
+/**
  * createFactory()
  * 
  * creates an factory.
@@ -490,6 +532,43 @@ export const createEntitiesDirectoryForModule = async (moduleName: string, rootD
     else {
         // The directory already exists.
         throw new Error(`Entities directory for module ${formatClassName(moduleName)} already exists.`);
+    }
+}
+
+/**
+ * createEventsDirectoryForModule()
+ * 
+ * creates an events directory for the specified module.
+ * @param moduleName the module name
+ * @param rootDir the root directory.
+ */
+
+export const createEventsDirectoryForModule = async (moduleName: string, rootDir: string): Promise<void> => {
+    if (!await eventsDirectoryExists(moduleName, rootDir)) {
+        // prepare the directory information.
+        const eventsDirectoryPathToCreate = eventsDirectoryPath(moduleName, rootDir);
+        const eventsWellFilePathToCreate = eventsWellFilePath(moduleName, rootDir);
+        const wellFileContents = await generateWellFileContents('events');
+
+        // write directory.
+        await makeDirectory(eventsDirectoryPathToCreate);
+
+        try {
+            // write well file
+            await writeFile(eventsWellFilePathToCreate, wellFileContents);
+        }
+        catch (e) {
+            // failed to create the well file.
+            await destroyDirectory(eventsDirectoryPathToCreate, {
+                recursive: true,
+                force: true,
+            });
+            throw e;
+        }
+    }
+    else {
+        // The directory already exists.
+        throw new Error(`Events directory for module ${formatClassName(moduleName)} already exists.`);
     }
 }
 
@@ -907,6 +986,101 @@ export const entitiesWellFilePath = (moduleName: string, rootDir: string): strin
 }
 
 /**
+ * evemtClassPath()
+ * 
+ * gets the path to the class file of the specified event name, in the specified module.
+ * @param evmtName the commandy name
+ * @param module the module name.
+ * @param rootDir the root directory of the project.
+ * @returns the class path.
+ */
+
+export const eventClassPath = (eventName: string, module: string, rootDir: string): string => {
+    return Path.resolve(eventDirectoryPath(eventName, module, rootDir), `${formatDirectoryOrFileName(eventName)}.event.ts`);
+}
+
+/**
+ * eventDirectoryPath()
+ * 
+ * gets the path to the events directory for the specified command and module.
+ * @param eventName the event name
+ * @param module the module name
+ * @param rootDir the root project directory.
+ * @returns the path to the repository directory.
+ */
+
+export const eventDirectoryPath = (eventName: string, module: string, rootDir: string): string => {
+    return Path.resolve(eventsDirectoryPath(module, rootDir), `${formatDirectoryOrFileName(eventName)}-event`);
+}
+
+/**
+ * eventExists()
+ * 
+ * determines if the specified event exists in the specified module.
+ * @param eventName the event name
+ * @param moduleName the module name
+ * @param rootDir the root directory.
+ * @returns 
+ */
+
+export const eventExists = async (eventName: string, moduleName: string, rootDir: string): Promise<boolean> => {
+    return await pathExists(eventDirectoryPath(eventName, moduleName, rootDir));
+}
+
+/**
+ * eventsDirectoryExists()
+ * 
+ * determines if the events directory for the specified module exists.
+ * @param moduleName moduleName
+ * @param rootDir the root directory.
+ * @returns TRUE if the values directory exists for the specified module. FALSE otherwise.
+ */
+
+export const eventsDirectoryExists = async (moduleName: string, rootDir: string): Promise<boolean> => {
+    const dirPath = eventsWellFilePath(moduleName, rootDir);
+    return await pathExists(dirPath);
+}
+
+/**
+ * eventsDirectoryPath()
+ * 
+ * gets the path to the events directory for the specified module.
+ * @param moduleName the module to search in.
+ * @param rootDir the root directory.
+ * @returns the path to the factories directory for that module.
+ */
+
+export const eventsDirectoryPath = (moduleName: string, rootDir: string): string => {
+    return Path.resolve(srcDirectoryPath(rootDir), formatDirectoryOrFileName(moduleName), 'events');
+}
+
+/**
+ * eventsWellFileExists()
+ * 
+ * determines if the events well exists for the specified module.
+ * @param moduleName the name of the module to test.
+ * @param rootDir the root project directory.
+ * @returns TRUE if the values well exists. FALSE otehrwise.
+ */
+
+export const eventsWellFileExists = async (moduleName: string, rootDir: string): Promise<boolean> => {
+    const dirPath = eventsWellFilePath(moduleName, rootDir);
+    return await pathExists(dirPath);
+}
+
+/**
+ * eventsWellFilePath()
+ * 
+ * gets the path for the events well.
+ * @param moduleName the name of the module.
+ * @param rootDir the root directory of the domeniere project.
+ */
+
+export const eventsWellFilePath = (moduleName: string, rootDir: string): string => {
+    return Path.resolve(eventsDirectoryPath(moduleName, rootDir), 'events.well.ts');
+}
+
+/**
  * exposeAggregate()
  * 
  * adds the specified aggregate to the module's well file.
@@ -1031,6 +1205,57 @@ export const exposeEntity = async (entityName: string, moduleName: string, rootD
     }
     else {
         throw new Error('Could not find Module or Entities directory.');
+    }
+}
+
+/**
+ * exposeEvent()
+ * 
+ * adds the specified event to the module's well file.
+ * @param evemtName the name of the evemt to export.
+ * @param moduleName the module where the value resides.
+ * @param rootDir the project root directory.
+ */
+
+export const exposeEvent = async (eventName: string, moduleName: string, rootDir: string): Promise<void> => {
+    if (await moduleExists(moduleName, rootDir) && await eventsWellFileExists(moduleName, rootDir) && await eventExists(eventName, moduleName, rootDir)) {
+        // data
+        const wellFilePath = eventsWellFilePath(moduleName, rootDir);
+        const patherizedEventName = formatDirectoryOrFileName(eventName);
+        const exportLine = `\nexport * from './${patherizedEventName}-event/${patherizedEventName}.event';`;
+
+        // append the module file.
+        if (!await fileContains(wellFilePath, exportLine)) {
+            await appendFile(wellFilePath, exportLine);
+        }
+    }
+    else {
+        throw new Error('Could not find module or event directory.');
+    }
+}
+
+/**
+ * exposeEventsWell()
+ * 
+ * exposes the events well to the module.
+ * @param moduleName the name of the module who's 
+ * @param rootDir the project root directory.
+ */
+
+export const exposeEventsWell = async (moduleName: string, rootDir: string): Promise<void> => {
+
+    if (await moduleExists(moduleName, rootDir) && await eventsWellFileExists(moduleName, rootDir)) {
+        // module data
+        const modulePath = moduleFilePath(moduleName, rootDir);
+        const exportLine = `\nexport * from './events/events.well';`;
+
+        // append the module file.
+        if (!await fileContains(modulePath, exportLine)) {
+            await appendFile(modulePath, exportLine);
+        }
+    }
+    else {
+        throw new Error('Could not find module or Events directory.');
     }
 }
 

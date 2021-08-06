@@ -2,6 +2,7 @@ import { PackageManager } from './util-types';
 import * as Path from 'path';
 import { readFile } from './fs-utils';
 import { formatClassName, formatDirectoryOrFileName, formatVariableName } from './formatter-utils';
+import { loadDomConfigFileContents } from './directory-utils';
 
 const API_PATH = Path.resolve(__dirname, `..${Path.sep}..${Path.sep}`, 'templates', 'API.template.txt');
 const EVENTSTORE_PATH = Path.resolve(__dirname, `..${Path.sep}..${Path.sep}`, 'templates', 'EVENTSTORE.template.txt');
@@ -26,7 +27,7 @@ const REPOSITORY_PATH = Path.resolve(__dirname, `..${Path.sep}..${Path.sep}`, 't
 const IDENTITY_REPOSITORY_PATH = Path.resolve(__dirname, `..${Path.sep}..${Path.sep}`, 'templates', 'IDENTITY_REPOSITORY.template.txt');
 const COMMAND_PATH = Path.resolve(__dirname, `..${Path.sep}..${Path.sep}`, 'templates', 'COMMAND.template.txt');
 const QUERY_PATH = Path.resolve(__dirname, `..${Path.sep}..${Path.sep}`, 'templates', 'QUERY.template.txt');
-
+const EVENT_PATH = Path.resolve(__dirname, `..${Path.sep}..${Path.sep}`, 'templates', 'EVENT.template.txt');
 
 /**
  * generateAggregateContents()
@@ -111,6 +112,29 @@ export const generateEntityContents = async (name: string): Promise<string> => {
     return template.toString()
         .replace(/__ENTITY_NAME__/g, formatClassName(name))
         .replace(/__ENTITY_PATH__/g, formatDirectoryOrFileName(name));
+}
+
+/**
+ * generateEventContents()
+ * 
+ * generates the event class contents with the specified name.
+ * @param name the name of the entity class.
+ * @returns the event class contents.
+ */
+
+export const generateEventContents = async (name: string, rootDir: string, broadcastEvent: boolean = false): Promise<string> => {
+    const domconfig = await loadDomConfigFileContents(rootDir);
+
+    if (!domconfig.name) {
+        throw new Error('Invalid nvalid domain name.');
+    }
+
+    const template = await readFile(EVENT_PATH);
+    return template.toString()
+        .replace(/__EVENT_CLASSIFICATION__/g, formatDirectoryOrFileName(domconfig.name))
+        .replace(/__EVENT_CLASS_NAME__/g, formatClassName(name))
+        .replace(/__EVENT_STRING_NAME__/g, formatDirectoryOrFileName(name))
+        .replace(/__BROADCAST_EVENT__/g, broadcastEvent ? 'true' : 'false');
 }
 
 /**

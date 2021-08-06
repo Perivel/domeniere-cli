@@ -15,12 +15,16 @@ import {
     generateEntityContents, 
     generateEventStoreFileContents,
     generateFactoryContents,
+    generateFactoryInterfaceContents,
     generateIdentifierInterfaceContents,
     generateIdentifierValueContents,
+    generateIdentityRepositoryContents,
     generateIndexFileContents,
     generateInterfaceContents,
     generateModuleFileContents,
     generatePackageJsonFileContents,
+    generateRepositoryContents,
+    generateRepositoryInterfaceContents,
     generateTimestampedAggregateContents,
     generateTimestampedEntityContents,
     generateTsconfigFileContents,
@@ -301,7 +305,7 @@ export const createEntity = async (entityName: string, moduleName: string, rootD
     // make sure the module and factories directories exists.
     if (await moduleExists(moduleName, rootDir) && await factoriesDirectoryExists(moduleName, rootDir)) {
         // load the entity contents
-        const factoryInterfaceContents = await generateInterfaceContents(factoryName);
+        const factoryInterfaceContents = await generateFactoryInterfaceContents(factoryName);
         const factoryClassContent = await generateFactoryContents(factoryName);
         const factoryDirPath = factoryDirectoryPath(factoryName, moduleName, rootDir);
         const factoryInterfaceFilePath = factoryInterfacePath(factoryName, moduleName, rootDir);
@@ -438,6 +442,87 @@ export const createEntitiesDirectoryForModule = async (moduleName: string, rootD
     else {
         // The directory already exists.
         throw new Error(`Factories directory for module ${formatClassName(moduleName)} already exists.`);
+    }
+}
+
+/**
+ * createRepositoriesDirectoryForModule()
+ * 
+ * creates a repositories directory for the specified module.
+ * @param moduleName the module name
+ * @param rootDir the root directory.
+ */
+
+export const createRepositoriesDirectoryForModule = async (moduleName: string, rootDir: string): Promise<void> => {
+    if (!await repositoriesDirectoryExists(moduleName, rootDir)) {
+        // prepare the directory information.
+        const repositoriesDirectoryPathToCreate = repositoriesDirectoryPath(moduleName, rootDir);
+        const repositoriesWellFilePathToCreate = repositoriesWellFilePath(moduleName, rootDir);
+        const wellFileContents = await generateWellFileContents('repositories');
+
+        // write directory.
+        await makeDirectory(repositoriesDirectoryPathToCreate);
+
+        try {
+            // write well file
+            await writeFile(repositoriesWellFilePathToCreate, wellFileContents);
+        }
+        catch (e) {
+            // failed to create the well file.
+            await destroyDirectory(repositoriesDirectoryPathToCreate, {
+                recursive: true,
+                force: true,
+            });
+            throw e;
+        }
+    }
+    else {
+        // The directory already exists.
+        throw new Error(`Repositories directory for module ${formatClassName(moduleName)} already exists.`);
+    }
+}
+
+/**
+ * createRepository()
+ * 
+ * creates an factory.
+ * @param repositoryName the repository name.
+ * @param moduleName the module name.
+ * @param rootDir the root directory.
+ * @param identity indicates whether the repository is an identity generating repository.
+ */
+
+export const createRepository = async (repositoryName: string, moduleName: string, rootDir: string, identity: boolean = false): Promise<void> => {
+    // make sure the module and repositories directories exists.
+    if (await moduleExists(moduleName, rootDir) && await repositoriesDirectoryExists(moduleName, rootDir)) {
+        // load the repository contents
+        const repositoryInterfaceContents = await generateRepositoryInterfaceContents(`${repositoryName}`);
+        const repositoryClassContent = identity ? await generateIdentityRepositoryContents(repositoryName) : await generateRepositoryContents(repositoryName);
+        const repositoryDirPath = repositoryDirectoryPath(repositoryName, moduleName, rootDir);
+        const repositoryInterfaceFilePath = repositoryInterfacePath(repositoryName, moduleName, rootDir);
+        const repositoryClassFilePath = repositoryClassPath(repositoryName, moduleName, rootDir);
+
+        // create the directory.
+        await makeDirectory(repositoryDirPath);
+
+        // create the files.
+        try {
+            await writeFile(repositoryInterfaceFilePath, repositoryInterfaceContents);
+            await writeFile(repositoryClassFilePath, repositoryClassContent);
+        }
+        catch (e) {
+            // failed to write files. Undo the operation.
+            await destroyDirectory(repositoryDirPath, {
+                recursive: true,
+                force: true,
+            });
+
+            return e;
+        }
+
+    }
+    else {
+        throw new Error('Module or Entities directory not found.');
     }
 }
 
@@ -766,7 +851,7 @@ export const exposeEntity = async (entityName: string, moduleName: string, rootD
         // data
         const wellFilePath = factoriesWellFilePath(moduleName, rootDir);
         const patherizedFactoryName = formatDirectoryOrFileName(factoryName);
-        const exportLine = `\nexport * from './${patherizedFactoryName}/${patherizedFactoryName}.interface';\nexport * from './${patherizedFactoryName}/${patherizedFactoryName}';`;
+        const exportLine = `\nexport * from './${patherizedFactoryName}-factory/${patherizedFactoryName}-factory.interface';\nexport * from './${patherizedFactoryName}-factory/${patherizedFactoryName}.factory';`;
 
         // append the module file.
         await appendFile(wellFilePath, exportLine);
@@ -823,6 +908,54 @@ export const exposeModule = async (moduleName: string, rootDir: string = process
         throw new Error('Module not found.');
     }
 }
+
+/**
+ * exposeRepositoriesWell()
+ * 
+ * exposes the repositories well to the module.
+ * @param moduleName the name of the module  
+ * @param rootDir the project root directory.
+ */
+
+export const exposeRepositoriesWell = async (moduleName: string, rootDir: string): Promise<void> => {
+
+    if (await moduleExists(moduleName, rootDir) && await repositoriesWellFileExists(moduleName, rootDir)) {
+        // module data
+        const modulePath = moduleFilePath(moduleName, rootDir);
+        const exportLine = `\nexport * from './repositories/repositories.well';`;
+
+        // append the module file.
+        await appendFile(modulePath, exportLine);
+    }
+    else {
+        throw new Error('Could not find module or repositories directory.');
+    }
+}
+
+/**
+ * exposeRepository()
+ * 
+ * adds the specified repository to the module's well file.
+ * @param repositoryName the name of the repository to export.
+ * @param moduleName the module where the value resides.
+ * @param rootDir the project root directory.
+ */
+
+export const exposeRepository = async (repositoryName: string, moduleName: string, rootDir: string): Promise<void> => {
+    if (await moduleExists(moduleName, rootDir) && await repositoriesWellFileExists(moduleName, rootDir) && await repositoryExists(repositoryName, moduleName, rootDir)) {
+        // data
+        const wellFilePath = repositoriesWellFilePath(moduleName, rootDir);
+        const patherizedRepositoryName = formatDirectoryOrFileName(repositoryName);
+        const exportLine = `\nexport * from './${patherizedRepositoryName}-repository/${patherizedRepositoryName}-repository.interface';\nexport * from './${patherizedRepositoryName}-repository/${patherizedRepositoryName}.repository';`;
+
+        // append the module file.
+        await appendFile(wellFilePath, exportLine);
+    }
+    else {
+        throw new Error('Could not find module or repositories directory.');
+    }
+}
+
 
 /**
  * exposeValue()
@@ -1133,6 +1266,129 @@ export const pathExists = async (path: string): Promise<boolean> => {
     catch (e) {
         return false;
     }
+}
+
+/**
+ * repositoriesDirectoryExists()
+ * 
+ * determines if the repositories directory for the specified module exists.
+ * @param moduleName moduleName
+ * @param rootDir the root directory.
+ * @returns TRUE if the values directory exists for the specified module. FALSE otherwise.
+ */
+
+export const repositoriesDirectoryExists = async (moduleName: string, rootDir: string): Promise<boolean> => {
+    const dirPath = repositoriesWellFilePath(moduleName, rootDir);
+    return await pathExists(dirPath);
+}
+
+
+/**
+ * repositoriesDirectoryPath()
+ * 
+ * gets the path to the repositories directory for the specified module.
+ * @param moduleName the module to search in.
+ * @param rootDir the root directory.
+ * @returns the path to the factories directory for that module.
+ */
+
+export const repositoriesDirectoryPath = (moduleName: string, rootDir: string): string => {
+    return Path.resolve(srcDirectoryPath(rootDir), formatDirectoryOrFileName(moduleName), 'repositories');
+}
+
+/**
+ * repositoriesDirectoryPath()
+ * 
+ * gets the path to the repositories directory for the specified module.
+ * @param moduleName the module to search in.
+ * @param rootDir the root directory.
+ * @returns the path to the factories directory for that module.
+ */
+
+export const rep0sitoriesDirectoryPath = (moduleName: string, rootDir: string): string => {
+    return Path.resolve(srcDirectoryPath(rootDir), formatDirectoryOrFileName(moduleName), 'repositories');
+}
+
+/**
+ * repositoriesWellFileExists()
+ * 
+ * determines if the repositories well exists for the specified module.
+ * @param moduleName the name of the module to test.
+ * @param rootDir the root project directory.
+ * @returns TRUE if the values well exists. FALSE otehrwise.
+ */
+
+export const repositoriesWellFileExists = async (moduleName: string, rootDir: string): Promise<boolean> => {
+    const dirPath = repositoriesWellFilePath(moduleName, rootDir);
+    return await pathExists(dirPath);
+}
+
+/**
+ * repositoriesWellFilePath()
+ * 
+ * gets the path for the repositories well.
+ * @param moduleName the name of the module.
+ * @param rootDir the root directory of the domeniere project.
+ */
+
+export const repositoriesWellFilePath = (moduleName: string, rootDir: string): string => {
+    return Path.resolve(repositoriesDirectoryPath(moduleName, rootDir), 'repositories.well.ts');
+}
+
+/**
+ * repositoryClassPath()
+ * 
+ * gets the path to the class file of the specified repository name, in the specified module.
+ * @param repositoryName the repository name
+ * @param module the module name.
+ * @param rootDir the root directory of the project.
+ * @returns the class path.
+ */
+
+export const repositoryClassPath = (repositoryName: string, module: string, rootDir: string): string => {
+    return Path.resolve(repositoryDirectoryPath(repositoryName, module, rootDir), `${formatDirectoryOrFileName(repositoryName)}.repository.ts`);
+}
+
+/**
+ * repositoryDirectoryPath()
+ * 
+ * gets the path to the repository directory for the specified repository and module.
+ * @param repositoryName the repository name
+ * @param module the module name
+ * @param rootDir the root project directory.
+ * @returns the path to the repository directory.
+ */
+
+export const repositoryDirectoryPath = (repositoryName: string, module: string, rootDir: string): string => {
+    return Path.resolve(repositoriesDirectoryPath(module, rootDir), `${formatDirectoryOrFileName(repositoryName)}-repository`);
+}
+
+/**
+ * repositoryExists()
+ * 
+ * determines if the specified repository exists in the specified module.
+ * @param repositoryName the repository name
+ * @param moduleName the module name
+ * @param rootDir the root directory.
+ * @returns 
+ */
+
+export const repositoryExists = async (repositoryName: string, moduleName: string, rootDir: string): Promise<boolean> => {
+    return await pathExists(repositoryDirectoryPath(repositoryName, moduleName, rootDir));
+}
+
+/**
+ * repositoryInterfacePath()
+ * 
+ * gets the path to the interface file of the specified repository name, in the specified module.
+ * @param repositoryName the repository name
+ * @param module the module name.
+ * @param rootDir the root directory of the project.
+ * @returns the interface path.
+ */
+
+export const repositoryInterfacePath = (repositoryName: string, module: string, rootDir: string): string => {
+    return Path.resolve(repositoryDirectoryPath(repositoryName, module, rootDir), `${formatDirectoryOrFileName(repositoryName)}-repository.interface.ts`);
 }
 
 /**

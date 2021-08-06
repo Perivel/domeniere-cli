@@ -5,3 +5,4 @@ export * from './scaffold-value.command';
 export * from './scaffold-entity.command';
 export * from './scaffold-aggregate.command';
 export * from './scaffold-factory.command';
+export * from './scaffold-repository.command';

@@ -12,6 +12,7 @@ const INDEX_PATH = Path.resolve(__dirname, `..${Path.sep}..${Path.sep}`, 'templa
 const MODULE_PATH = Path.resolve(__dirname, `..${Path.sep}..${Path.sep}`, 'templates', 'MODULE.template.txt');
 const WELL_PATH = Path.resolve(__dirname, `..${Path.sep}..${Path.sep}`, 'templates', 'WELL.template.txt');
 const INTERFACE_PATH = Path.resolve(__dirname, `..${Path.sep}..${Path.sep}`, 'templates', 'INTERFACE.template.txt');
+const FACTORY_INTERFACE_PATH = Path.resolve(__dirname, `..${Path.sep}..${Path.sep}`, 'templates', 'FACTORY_INTERFACE.template.txt');
 const IDENTIFIER_INTERFACE_PATH = Path.resolve(__dirname, `..${Path.sep}..${Path.sep}`, 'templates', 'IDENTIFIER_INTERFACE.template.txt');
 const VALUE_PATH = Path.resolve(__dirname, `..${Path.sep}..${Path.sep}`, 'templates', 'VALUE.template.txt');
 const IDENTIFIER_VALUE_PATH = Path.resolve(__dirname, `..${Path.sep}..${Path.sep}`, 'templates', 'IDENTIFIER_VALUE.template.txt');
@@ -20,7 +21,9 @@ const TIMESTAMPED_ENTITY_PATH = Path.resolve(__dirname, `..${Path.sep}..${Path.s
 const AGGREGATE_PATH = Path.resolve(__dirname, `..${Path.sep}..${Path.sep}`, 'templates', 'AGGREGATE.template.txt');
 const TIMESTAMPED_AGGREGATE_PATH = Path.resolve(__dirname, `..${Path.sep}..${Path.sep}`, 'templates', 'TIMESTAMPED_AGGREGATE.template.txt');
 const FACTORY_PATH = Path.resolve(__dirname, `..${Path.sep}..${Path.sep}`, 'templates', 'FACTORY.template.txt');
-
+const REPOSITORY_INTERFACE_PATH = Path.resolve(__dirname, `..${Path.sep}..${Path.sep}`, 'templates', 'REPOSITORY_INTERFACE.template.txt');
+const REPOSITORY_PATH = Path.resolve(__dirname, `..${Path.sep}..${Path.sep}`, 'templates', 'REPOSITORY.template.txt');
+const IDENTITY_REPOSITORY_PATH = Path.resolve(__dirname, `..${Path.sep}..${Path.sep}`, 'templates', 'IDENTITY_REPOSITORY.template.txt');
 
 /**
  * generateAggregateContents()
@@ -104,9 +107,9 @@ export const generateEntityContents = async (name: string): Promise<string> => {
  export const generateFactoryContents = async (name: string): Promise<string> => {
     const template = await readFile(FACTORY_PATH);
     return template.toString()
-        .replace(/__FACTORY_NAME__/g, formatClassName(name));
+        .replace(/__FACTORY_NAME__/g, formatClassName(name))
+        .replace(/__FACTORY_PATH__/g, formatDirectoryOrFileName(name));
 }
-
 
 /**
  * generateIdentifierInterfaceContents()
@@ -157,6 +160,21 @@ export const generateEventStoreFileContents = async (domainName: string): Promis
 }
 
 /**
+ * generateIdentityRepositoryContents()
+ * 
+ * generates the identity repository class contents with the specified name.
+ * @param name the name of the value class.
+ * @returns the value class contents.
+ */
+
+export const generateIdentityRepositoryContents = async (name: string): Promise<string> => {
+    const template = await readFile(IDENTITY_REPOSITORY_PATH);
+    return template.toString()
+        .replace(/__REPOSITORY_NAME__/g, formatClassName(name))
+        .replace(/__REPOSITORY_PATH__/g, `${formatDirectoryOrFileName(name)}`);
+}
+
+/**
  * generateIndexFileContents()
  * 
  * generates the index file contents.
@@ -168,6 +186,20 @@ export const generateIndexFileContents = async (domainName: string): Promise<str
     const template = await readFile(INDEX_PATH);
     return template.toString()
         .replace(/__DOMAIN_NAME__/g, formatDirectoryOrFileName(domainName));
+}
+
+/**
+ * generateFactoryInterfaceContents()
+ * 
+ * generates the factory interface contents with the specified name.
+ * @param name the name of the interface.
+ * @returns the interface contents.
+ */
+
+export const generateFactoryInterfaceContents = async (name: string): Promise<string> => {
+    const template = await readFile(FACTORY_INTERFACE_PATH);
+    return template.toString()
+        .replace(/__NAME__/g, formatClassName(name));
 }
 
 /**
@@ -222,6 +254,36 @@ export const generatePackageJsonFileContents = async (domainName: string, descri
         .replace(/__DOMAIN_REPOSITORY__/g, repository)
         .replace(/__DOMAIN_LICENSE__/g, license);
 }
+
+/**
+ * generateRepositoryContents()
+ * 
+ * generates the repository class contents with the specified name.
+ * @param name the name of the value class.
+ * @returns the value class contents.
+ */
+
+export const generateRepositoryContents = async (name: string): Promise<string> => {
+    const template = await readFile(REPOSITORY_PATH);
+    return template.toString()
+        .replace(/__REPOSITORY_NAME__/g, formatClassName(name))
+        .replace(/__REPOSITORY_PATH__/g, formatDirectoryOrFileName(name));
+}
+
+/**
+ * generateRepositoryInterfaceContents()
+ * 
+ * generates the repository interface contents with the specified name.
+ * @param name the name of the interface.
+ * @returns the interface contents.
+ */
+
+export const generateRepositoryInterfaceContents = async (name: string): Promise<string> => {
+    const template = await readFile(REPOSITORY_INTERFACE_PATH);
+    return template.toString()
+        .replace(/__NAME__/g, formatClassName(name));
+}
+
 
 /**
  * generateTimestampAggregateContents()

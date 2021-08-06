@@ -923,7 +923,9 @@ export const entitiesWellFilePath = (moduleName: string, rootDir: string): strin
         const exportLine = `\nexport * from './${patherizedAggregateName}/${patherizedAggregateName}.interface';\nexport * from './${patherizedAggregateName}/${patherizedAggregateName}';`;
 
         // append the module file.
-        await appendFile(wellFilePath, exportLine);
+        if (!await fileContains(wellFilePath, exportLine)) {
+            await appendFile(wellFilePath, exportLine);
+        }
     }
     else {
         throw new Error('Could not find Module or Aggregates directory.');
@@ -946,7 +948,9 @@ export const entitiesWellFilePath = (moduleName: string, rootDir: string): strin
         const exportLine = `\nexport * from './aggregates/aggregates.well';`;
     
         // append the module file.
-        await appendFile(modulePath, exportLine);
+        if (!await fileContains(modulePath, exportLine)) {
+            await appendFile(modulePath, exportLine);;
+        }
     }
     else {
         throw new Error('Could not find module or Aggregates directory.');
@@ -970,7 +974,9 @@ export const exposeCommand = async (commandName: string, moduleName: string, roo
         const exportLine = `\nexport * from './${patherizedCommandName}-command/${patherizedCommandName}.command';`;
 
         // append the module file.
-        await appendFile(wellFilePath, exportLine);
+        if (!await fileContains(wellFilePath, exportLine)) {
+            await appendFile(wellFilePath, exportLine);
+        }
     }
     else {
         throw new Error('Could not find module or command directory.');
@@ -993,7 +999,9 @@ export const exposeEntitiesWell = async (moduleName: string, rootDir: string): P
         const exportLine = `\nexport * from './entities/entities.well';`;
 
         // append the module file.
-        await appendFile(modulePath, exportLine);
+        if (!await fileContains(modulePath, exportLine)) {
+            await appendFile(modulePath, exportLine);
+        }
     }
     else {
         throw new Error('Could not find module or Entities directory.');
@@ -1017,7 +1025,9 @@ export const exposeEntity = async (entityName: string, moduleName: string, rootD
         const exportLine = `\nexport * from './${patherizedEntityName}/${patherizedEntityName}.interface';\nexport * from './${patherizedEntityName}/${patherizedEntityName}';`;
 
         // append the module file.
-        await appendFile(wellFilePath, exportLine);
+        if (!await fileContains(wellFilePath, exportLine)) {
+            await appendFile(wellFilePath, exportLine);
+        }
     }
     else {
         throw new Error('Could not find Module or Entities directory.');
@@ -1041,7 +1051,9 @@ export const exposeEntity = async (entityName: string, moduleName: string, rootD
         const exportLine = `\nexport * from './${patherizedFactoryName}-factory/${patherizedFactoryName}-factory.interface';\nexport * from './${patherizedFactoryName}-factory/${patherizedFactoryName}.factory';`;
 
         // append the module file.
-        await appendFile(wellFilePath, exportLine);
+        if (!await fileContains(wellFilePath, exportLine)) {
+            await appendFile(wellFilePath, exportLine);
+        }
     }
     else {
         throw new Error('Could not find module or Factories directory.');
@@ -1064,7 +1076,9 @@ export const exposeEntity = async (entityName: string, moduleName: string, rootD
         const exportLine = `\nexport * from './factories/factories.well';`;
     
         // append the module file.
-        await appendFile(modulePath, exportLine);
+        if (!await fileContains(modulePath, exportLine)) {
+            await appendFile(modulePath, exportLine);
+        }
     }
     else {
         throw new Error('Could not find module or Factories directory.');
@@ -1089,7 +1103,9 @@ export const exposeModule = async (moduleName: string, rootDir: string = process
         const exportLine = `\nexport * from './src/${moduleDirName}/${moduleDirName}.module';`;
 
         // append the index file.
-        await appendFile(indexFilePath, exportLine);
+        if (!await fileContains(indexFilePath, exportLine)) {
+            await appendFile(indexFilePath, exportLine);
+        }
     }
     else {
         throw new Error('Module not found.');
@@ -1113,7 +1129,9 @@ export const exposeQuery = async (queryName: string, moduleName: string, rootDir
         const exportLine = `\nexport * from './${patherizedQueryName}-query/${patherizedQueryName}.query';`;
 
         // append the module file.
-        await appendFile(wellFilePath, exportLine);
+        if (!await fileContains(wellFilePath, exportLine)) {
+            await appendFile(wellFilePath, exportLine);
+        }
     }
     else {
         throw new Error('Could not find module or query directory.');
@@ -1136,7 +1154,9 @@ export const exposeRepositoriesWell = async (moduleName: string, rootDir: string
         const exportLine = `\nexport * from './repositories/repositories.well';`;
 
         // append the module file.
-        await appendFile(modulePath, exportLine);
+        if (!await fileContains(modulePath, exportLine)) {
+            await appendFile(modulePath, exportLine);
+        }
     }
     else {
         throw new Error('Could not find module or repositories directory.');
@@ -1160,7 +1180,9 @@ export const exposeRepository = async (repositoryName: string, moduleName: strin
         const exportLine = `\nexport * from './${patherizedRepositoryName}-repository/${patherizedRepositoryName}-repository.interface';\nexport * from './${patherizedRepositoryName}-repository/${patherizedRepositoryName}.repository';`;
 
         // append the module file.
-        await appendFile(wellFilePath, exportLine);
+        if (!await fileContains(wellFilePath, exportLine)) {
+            await appendFile(wellFilePath, exportLine);
+        }
     }
     else {
         throw new Error('Could not find module or repositories directory.');
@@ -1183,7 +1205,9 @@ export const exposeServicesWell = async (moduleName: string, rootDir: string): P
         const exportLine = `\nexport * from './services/services.well';`;
 
         // append the module file.
-        await appendFile(modulePath, exportLine);
+        if (!await fileContains(modulePath, exportLine)) {
+            await appendFile(modulePath, exportLine);
+        }
     }
     else {
         throw new Error('Could not find module or Services directory.');
@@ -1208,7 +1232,9 @@ export const exposeValue = async (valueName: string, moduleName: string, rootDir
         const exportLine = `\nexport * from './${patherizedValueName}/${patherizedValueName}.interface';\nexport * from './${patherizedValueName}/${patherizedValueName}';`;
 
         // append the module file.
-        await appendFile(wellFilePath, exportLine);
+        if (!await fileContains(wellFilePath, exportLine)) {
+            await appendFile(wellFilePath, exportLine);
+        }
     }
     else {
         throw new Error('Could not find module or Values directory.');
@@ -1231,7 +1257,9 @@ export const exposeValuesWell = async (moduleName: string, rootDir: string): Pro
         const exportLine = `\nexport * from './values/values.well';`;
     
         // append the module file.
-        await appendFile(modulePath, exportLine);
+        if (!await fileContains(modulePath, exportLine)) {
+            await appendFile(modulePath, exportLine);
+        }
     }
     else {
         throw new Error('Could not find module or Values directory.');
@@ -1345,6 +1373,20 @@ export const exposeValuesWell = async (moduleName: string, rootDir: string): Pro
 
  export const factoryInterfacePath = (factoryName: string, module: string, rootDir: string): string => {
     return Path.resolve(factoryDirectoryPath(factoryName, module, rootDir), `${formatDirectoryOrFileName(factoryName)}-factory.interface.ts`);
+}
+
+/**
+ * fileContains()
+ * 
+ * determines if the file contains the contents.
+ * @param path the path of the file to check.
+ * @param contents the contents to check for
+ * @returns TRUE if the the file contains the contents. FALSE otherwise.
+ */
+
+export const fileContains = async (path: string, contents: string): Promise<boolean> => {
+    const file = await readFile(path);
+    return file.toString().includes(contents);
 }
 
 /**

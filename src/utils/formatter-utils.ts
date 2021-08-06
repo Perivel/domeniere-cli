@@ -22,7 +22,7 @@ export const formatApiFileName = (domainName: string): string => {
  */
 
 export const formatClassName = (dirty: string): string => {
-    return capitalCase(dirty).replace(' ', '').trim();
+    return capitalCase(dirty).replace(/\s+/g, '').trim();
 }
 
 /**

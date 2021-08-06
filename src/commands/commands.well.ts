@@ -7,3 +7,4 @@ export * from './scaffold-aggregate.command';
 export * from './scaffold-factory.command';
 export * from './scaffold-repository.command';
 export * from './scaffold-command.command';
+export * from './scaffold-query.command';

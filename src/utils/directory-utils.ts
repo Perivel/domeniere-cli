@@ -24,6 +24,7 @@ import {
     generateInterfaceContents,
     generateModuleFileContents,
     generatePackageJsonFileContents,
+    generateQueryContents,
     generateRepositoryContents,
     generateRepositoryInterfaceContents,
     generateTimestampedAggregateContents,
@@ -526,6 +527,46 @@ export const createEntitiesDirectoryForModule = async (moduleName: string, rootD
     else {
         // The directory already exists.
         throw new Error(`Factories directory for module ${formatClassName(moduleName)} already exists.`);
+    }
+}
+
+/**
+ * createQuery()
+ * 
+ * creates an query.
+ * @param queryName the query name.
+ * @param moduleName the module name.
+ * @param rootDir the root directory.
+ */
+
+export const createQuery = async (queryName: string, moduleName: string, rootDir: string, identity: boolean = false): Promise<void> => {
+    // make sure the module and services directories exists.
+    if (await moduleExists(moduleName, rootDir) && await servicesDirectoryExists(moduleName, rootDir)) {
+        // load the query contents
+        const queryClassContent = await generateQueryContents(queryName);
+        const queryDirPath = queryDirectoryPath(queryName, moduleName, rootDir);
+        const queryClassFilePath = queryClassPath(queryName, moduleName, rootDir);
+
+        // create the directory.
+        await makeDirectory(queryDirPath);
+
+        // create the files.
+        try {
+            await writeFile(queryClassFilePath, queryClassContent);
+        }
+        catch (e) {
+            // failed to write files. Undo the operation.
+            await destroyDirectory(queryDirPath, {
+                recursive: true,
+                force: true,
+            });
+
+            return e;
+        }
+
+    }
+    else {
+        throw new Error('Module or services directory not found.');
     }
 }
 
@@ -1056,6 +1097,30 @@ export const exposeModule = async (moduleName: string, rootDir: string = process
 }
 
 /**
+ * exposeQuery()
+ * 
+ * adds the specified query to the module's well file.
+ * @param queryName the name of the query to export.
+ * @param moduleName the module where the value resides.
+ * @param rootDir the project root directory.
+ */
+
+export const exposeQuery = async (queryName: string, moduleName: string, rootDir: string): Promise<void> => {
+    if (await moduleExists(moduleName, rootDir) && await servicesWellFileExists(moduleName, rootDir) && await queryExists(queryName, moduleName, rootDir)) {
+        // data
+        const wellFilePath = servicesWellFilePath(moduleName, rootDir);
+        const patherizedQueryName = formatDirectoryOrFileName(queryName);
+        const exportLine = `\nexport * from './${patherizedQueryName}-query/${patherizedQueryName}.query';`;
+
+        // append the module file.
+        await appendFile(wellFilePath, exportLine);
+    }
+    else {
+        throw new Error('Could not find module or query directory.');
+    }
+}
+
+/**
  * exposeRepositoriesWell()
  * 
  * exposes the repositories well to the module.
@@ -1435,6 +1500,48 @@ export const pathExists = async (path: string): Promise<boolean> => {
     catch (e) {
         return false;
     }
+}
+
+/**
+ * queryClassPath()
+ * 
+ * gets the path to the class file of the specified query name, in the specified module.
+ * @param queryName the query name
+ * @param module the module name.
+ * @param rootDir the root directory of the project.
+ * @returns the class path.
+ */
+
+export const queryClassPath = (queryName: string, module: string, rootDir: string): string => {
+    return Path.resolve(queryDirectoryPath(queryName, module, rootDir), `${formatDirectoryOrFileName(queryName)}.query.ts`);
+}
+
+/**
+ * queryDirectoryPath()
+ * 
+ * gets the path to the query directory for the specified command and module.
+ * @param queryName the command name
+ * @param module the module name
+ * @param rootDir the root project directory.
+ * @returns the path to the repository directory.
+ */
+
+export const queryDirectoryPath = (queryName: string, module: string, rootDir: string): string => {
+    return Path.resolve(servicesDirectoryPath(module, rootDir), `${formatDirectoryOrFileName(queryName)}-query`);
+}
+
+/**
+ * queryExists()
+ * 
+ * determines if the specified query exists in the specified module.
+ * @param queryName the query name
+ * @param moduleName the module name
+ * @param rootDir the root directory.
+ * @returns 
+ */
+
+export const queryExists = async (queryName: string, moduleName: string, rootDir: string): Promise<boolean> => {
+    return await pathExists(queryDirectoryPath(queryName, moduleName, rootDir));
 }
 
 /**

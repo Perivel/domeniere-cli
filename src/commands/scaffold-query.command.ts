@@ -4,14 +4,15 @@ import {
 } from "clipanion";
 import * as t from 'typanion';
 import {
-    commandExists,
-    createCommand,
+    createQuery,
     createServicesDirectoryForModule,
-    exposeCommand,
+    exposeQuery,
     exposeServicesWell,
     isDomeniereProject,
     moduleExists,
-    servicesDirectoryExists} from "../utils/directory-utils";
+    queryExists,
+    servicesDirectoryExists
+} from "../utils/directory-utils";
 import {
     formatClassName,
     formatLogError,
@@ -24,16 +25,16 @@ import {
 } from "../utils/spinner-util";
 
 /**
- * ScaffoldCommandCommand
+ * ScaffoldQueryCommand
  * 
- * Scaffolds an Command.
+ * Scaffolds an Query.
  */
 
-export class ScaffoldCommandCommand extends Command {
+export class ScaffoldQueryCommand extends Command {
 
     static paths = [
-        ['generate', 'command'],
-        ['g', 'command']
+        ['generate', 'query'],
+        ['g', 'query']
     ];
 
     // ===================================================
@@ -41,12 +42,12 @@ export class ScaffoldCommandCommand extends Command {
     // ===================================================
 
     /**
-     * entityName
+     * queryName
      * 
-     * The name of the entity
+     * The name of the query
      */
 
-    commandName = Option.String({ required: true, name: 'name', validator: t.isString() });
+    queryName = Option.String({ required: true, name: 'name', validator: t.isString() });
 
     /**
      * module
@@ -62,12 +63,12 @@ export class ScaffoldCommandCommand extends Command {
 
     static usage = {
         category: 'Templates',
-        description: "Generates an Command",
-        details: "Creates a Command inside the specified module.",
+        description: "Generates an Query",
+        details: "Creates a Query inside the specified module.",
     }
 
     async execute(): Promise<number> {
-        this.context.stdout.write(formatLogInfo('Creating Command.\n'));
+        this.context.stdout.write(formatLogInfo('Creating Query.\n'));
 
         // validation
         startSpinner(formatLogInfo('Verifying...'));
@@ -82,9 +83,9 @@ export class ScaffoldCommandCommand extends Command {
                 throw new Error(`Module ${formatClassName(this.module)} does not exist.`);
             }
 
-            // make sure the command does not already exist
-            if (await commandExists(this.commandName, this.module, process.cwd())) {
-                throw new Error(`Command ${formatClassName(this.commandName)}Command already exists in module ${formatClassName(this.module)}`);
+            // make sure the query does not already exist
+            if (await queryExists(this.queryName, this.module, process.cwd())) {
+                throw new Error(`Query ${formatClassName(this.queryName)}Query already exists in module ${formatClassName(this.module)}`);
             }
             stopSpinnerWithSuccess(formatLogInfo('Validation complete.'))
         }
@@ -94,7 +95,7 @@ export class ScaffoldCommandCommand extends Command {
             return 1;
         }
 
-        // create the command
+        // create the query
         startSpinner(formatLogInfo("Writing Command files..."));
         try {
             // create the services directory if it does not already exist.
@@ -105,13 +106,13 @@ export class ScaffoldCommandCommand extends Command {
             }
 
             // create the command
-            await createCommand(this.commandName, this.module, process.cwd());
+            await createQuery(this.queryName, this.module, process.cwd());
 
             // add the command to the values well
-            await exposeCommand(this.commandName, this.module, process.cwd());
+            await exposeQuery(this.queryName, this.module, process.cwd());
 
-            stopSpinnerWithSuccess(formatLogInfo("Successfully written command files."));
-            this.context.stdout.write(formatLogInfo(`Successfully created Command ${formatClassName(this.commandName)}Command in module ${formatClassName(this.module)}\n`));
+            stopSpinnerWithSuccess(formatLogInfo("Successfully written query files."));
+            this.context.stdout.write(formatLogInfo(`Successfully created Query ${formatClassName(this.queryName)}Query in module ${formatClassName(this.module)}\n`));
             return 0;
         }
         catch (e) {

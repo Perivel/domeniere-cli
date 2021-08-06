@@ -25,6 +25,8 @@ const REPOSITORY_INTERFACE_PATH = Path.resolve(__dirname, `..${Path.sep}..${Path
 const REPOSITORY_PATH = Path.resolve(__dirname, `..${Path.sep}..${Path.sep}`, 'templates', 'REPOSITORY.template.txt');
 const IDENTITY_REPOSITORY_PATH = Path.resolve(__dirname, `..${Path.sep}..${Path.sep}`, 'templates', 'IDENTITY_REPOSITORY.template.txt');
 const COMMAND_PATH = Path.resolve(__dirname, `..${Path.sep}..${Path.sep}`, 'templates', 'COMMAND.template.txt');
+const QUERY_PATH = Path.resolve(__dirname, `..${Path.sep}..${Path.sep}`, 'templates', 'QUERY.template.txt');
+
 
 /**
  * generateAggregateContents()
@@ -268,6 +270,20 @@ export const generatePackageJsonFileContents = async (domainName: string, descri
         .replace(/__DOMAIN_AUTHOR__/g, author)
         .replace(/__DOMAIN_REPOSITORY__/g, repository)
         .replace(/__DOMAIN_LICENSE__/g, license);
+}
+
+/**
+ * generateQueryContents()
+ * 
+ * generates the query class contents with the specified name.
+ * @param name the name of the query class.
+ * @returns the value class contents.
+ */
+
+export const generateQueryContents = async (name: string): Promise<string> => {
+    const template = await readFile(QUERY_PATH);
+    return template.toString()
+        .replace(/__QUERY_NAME__/g, formatClassName(name));
 }
 
 /**

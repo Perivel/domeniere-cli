@@ -62,7 +62,7 @@ export class ScaffoldValueCommand extends Command {
      * Indicates whether or not the 
      */
 
-    identifier = Option.Boolean('--id', {description: 'Indicates whether the value will be used as an ID', required: false});
+    identifier = Option.Boolean('-i', {description: 'Indicates whether the value will be used as an ID', required: false});
 
     // ============================================
     // usage information

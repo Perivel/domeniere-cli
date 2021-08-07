@@ -466,11 +466,7 @@ export const createEvent = async (eventName: string, moduleName: string, rootDir
     if (await moduleExists(moduleName, rootDir) && await eventsDirectoryExists(moduleName, rootDir)) {
         // load the event contents
         const eventClassContent = await generateEventContents(eventName, rootDir, broadcastEvent);
-        const eventDirPath = eventDirectoryPath(eventName, moduleName, rootDir);
         const eventClassFilePath = eventClassPath(eventName, moduleName, rootDir);
-
-        // create the directory.
-        await makeDirectory(eventDirPath);
 
         // create the files.
         try {
@@ -478,10 +474,7 @@ export const createEvent = async (eventName: string, moduleName: string, rootDir
         }
         catch (e) {
             // failed to write files. Undo the operation.
-            await destroyDirectory(eventDirPath, {
-                recursive: true,
-                force: true,
-            });
+            await destroyFile(eventClassFilePath);
 
             return e;
         }
@@ -1225,7 +1218,7 @@ export const entitiesWellFilePath = (moduleName: string, rootDir: string): strin
  */
 
 export const eventClassPath = (eventName: string, module: string, rootDir: string): string => {
-    return Path.resolve(eventDirectoryPath(eventName, module, rootDir), `${formatDirectoryOrFileName(eventName)}.event.ts`);
+    return Path.resolve(eventsDirectoryPath(module, rootDir), `${formatDirectoryOrFileName(eventName)}.event.ts`);
 }
 
 /**
@@ -1253,7 +1246,7 @@ export const eventDirectoryPath = (eventName: string, module: string, rootDir: s
  */
 
 export const eventExists = async (eventName: string, moduleName: string, rootDir: string): Promise<boolean> => {
-    return await pathExists(eventDirectoryPath(eventName, moduleName, rootDir));
+    return await pathExists(eventClassPath(eventName, moduleName, rootDir));
 }
 
 /**
@@ -1503,7 +1496,7 @@ export const exposeEvent = async (eventName: string, moduleName: string, rootDir
         // data
         const wellFilePath = eventsWellFilePath(moduleName, rootDir);
         const patherizedEventName = formatDirectoryOrFileName(eventName);
-        const exportLine = `\nexport * from './${patherizedEventName}-event/${patherizedEventName}.event';`;
+        const exportLine = `\nexport * from './${patherizedEventName}.event';`;
 
         // append the module file.
         if (!await fileContains(wellFilePath, exportLine)) {

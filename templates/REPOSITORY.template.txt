@@ -1,6 +1,7 @@
 import { Repository } from 'domeniere';
 import { __REPOSITORY_NAME__RepositoryInterface } from './__REPOSITORY_PATH__-repository.interface';
 
+
 export abstract class __REPOSITORY_NAME__Repository extends Repository implements __REPOSITORY_NAME__RepositoryInterface {
 
     constructor() {

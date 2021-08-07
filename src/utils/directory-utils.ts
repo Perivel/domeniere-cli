@@ -20,6 +20,7 @@ import {
     generateEventStoreFileContents,
     generateFactoryContents,
     generateFactoryInterfaceContents,
+    generateGitignoreFileContents,
     generateIdentifierInterfaceContents,
     generateIdentifierValueContents,
     generateIdentityRepositoryContents,
@@ -58,7 +59,7 @@ import {
  * @param aggregateName the aggregate name
  * @param module the module name
  * @param rootDir the root project directory.
- * @returns the path to the value object directory.
+ * @returns the path to the aggregate directory.
  */
 
  export const aggregateDirectoryPath = (aggregateName: string, module: string, rootDir: string): string => {
@@ -113,7 +114,7 @@ import {
  * determines if the aggregates well exists for the specified module.
  * @param moduleName the name of the module to test.
  * @param rootDir the root project directory.
- * @returns TRUE if the entities well exists. FALSE otehrwise.
+ * @returns TRUE if the aggregates well exists. FALSE otehrwise.
  */
 
  export const aggregatesWellFileExists = async (moduleName: string, rootDir: string): Promise<boolean> => {
@@ -140,7 +141,7 @@ import {
  * @param aggregateName the aggregate name
  * @param moduleName the module name
  * @param rootDir the root directory.
- * @returns 
+ * @returns TRUE if the aggregate exists. FALSE otherwise.
  */
 
  export const aggregateExists = async (aggregateName: string, moduleName: string, rootDir: string): Promise<boolean> => {
@@ -166,7 +167,7 @@ export const apiFilePath = (domainName: string, rootDir: string): string => {
  * gets the path to the aggregates directory for the specified module.
  * @param moduleName the module to search in.
  * @param rootDir the root directory.
- * @returns the path to the values directory for that module.
+ * @returns the path to the aggregates directory for that module.
  */
 
  export const aggregatesDirectoryPath = (moduleName: string, rootDir: string): string => {
@@ -177,7 +178,7 @@ export const apiFilePath = (domainName: string, rootDir: string): string => {
  * commandClassPath()
  * 
  * gets the path to the class file of the specified command name, in the specified module.
- * @param commandName the commandy name
+ * @param commandName the command name
  * @param module the module name.
  * @param rootDir the root directory of the project.
  * @returns the class path.
@@ -194,7 +195,7 @@ export const commandClassPath = (commandName: string, module: string, rootDir: s
  * @param commandName the command name
  * @param module the module name
  * @param rootDir the root project directory.
- * @returns the path to the repository directory.
+ * @returns the path to the command directory.
  */
 
 export const commandDirectoryPath = (commandName: string, module: string, rootDir: string): string => {
@@ -208,7 +209,7 @@ export const commandDirectoryPath = (commandName: string, module: string, rootDi
  * @param commandName the command name
  * @param moduleName the module name
  * @param rootDir the root directory.
- * @returns 
+ * @returns TRUE if the command exists. FALSE otherwise.
  */
 
 export const commandExists = async (commandName: string, moduleName: string, rootDir: string): Promise<boolean> => {
@@ -228,7 +229,7 @@ export const commandExists = async (commandName: string, moduleName: string, roo
  export const createAggregate = async (aggregateName: string, moduleName: string, rootDir: string, timestamped: boolean = false): Promise<void> => {
     // make sure the module and aggregates directories exists.
     if (await moduleExists(moduleName, rootDir) && await aggregatesDirectoryExists(moduleName, rootDir)) {
-        // load the entity contents
+        // load the aggregate contents
         const aggregateInterfaceContents = await generateInterfaceContents(aggregateName);
         const aggregateClassContent = timestamped ? await generateTimestampedAggregateContents(aggregateName) : await generateAggregateContents(aggregateName);
         const aggregateDirPath = aggregateDirectoryPath(aggregateName, moduleName, rootDir);
@@ -299,14 +300,13 @@ export const commandExists = async (commandName: string, moduleName: string, roo
 /**
  * createCommand()
  * 
- * creates an factory.
+ * creates a command
  * @param commandName the command name.
  * @param moduleName the module name.
  * @param rootDir the root directory.
- * @param identity indicates whether the repository is an identity generating repository.
  */
 
-export const createCommand = async (commandName: string, moduleName: string, rootDir: string, identity: boolean = false): Promise<void> => {
+export const createCommand = async (commandName: string, moduleName: string, rootDir: string): Promise<void> => {
     // make sure the module and services directories exists.
     if (await moduleExists(moduleName, rootDir) && await servicesDirectoryExists(moduleName, rootDir)) {
         // load the command contents
@@ -333,7 +333,7 @@ export const createCommand = async (commandName: string, moduleName: string, roo
 
     }
     else {
-        throw new Error('Module or Entities directory not found.');
+        throw new Error('Module or Services directory not found.');
     }
 }
 
@@ -341,7 +341,7 @@ export const createCommand = async (commandName: string, moduleName: string, roo
  * createDto()
  * 
  * creates a DTO
- * @param dtoName the specification name.
+ * @param dtoName the dto name.
  * @param moduleName the module name.
  * @param rootDir the root directory.
  */
@@ -349,7 +349,7 @@ export const createCommand = async (commandName: string, moduleName: string, roo
 export const createDto = async (dtoName: string, moduleName: string, rootDir: string): Promise<void> => {
     // make sure the module and dtos directories exists.
     if (await moduleExists(moduleName, rootDir) && await dtosDirectoryExists(moduleName, rootDir)) {
-        // load the specification contents
+        // load the dto contents
         const dtoClassContent = await generateDtoContents(dtoName);
         const dtoClassFilePath = dtoClassPath(dtoName, moduleName, rootDir);
 
@@ -403,7 +403,7 @@ export const createDtosDirectoryForModule = async (moduleName: string, rootDir: 
     }
     else {
         // The directory already exists.
-        throw new Error(`Specifications directory for module ${formatClassName(moduleName)} already exists.`);
+        throw new Error(`Data directory for module ${formatClassName(moduleName)} already exists.`);
     }
 }
 
@@ -464,7 +464,7 @@ export const createEntity = async (entityName: string, moduleName: string, rootD
 export const createEvent = async (eventName: string, moduleName: string, rootDir: string, broadcastEvent: boolean = false): Promise<void> => {
     // make sure the module and events directories exists.
     if (await moduleExists(moduleName, rootDir) && await eventsDirectoryExists(moduleName, rootDir)) {
-        // load the entity contents
+        // load the event contents
         const eventClassContent = await generateEventContents(eventName, rootDir, broadcastEvent);
         const eventDirPath = eventDirectoryPath(eventName, moduleName, rootDir);
         const eventClassFilePath = eventClassPath(eventName, moduleName, rootDir);
@@ -504,7 +504,7 @@ export const createEvent = async (eventName: string, moduleName: string, rootDir
  export const createFactory = async (factoryName: string, moduleName: string, rootDir: string): Promise<void> => {
     // make sure the module and factories directories exists.
     if (await moduleExists(moduleName, rootDir) && await factoriesDirectoryExists(moduleName, rootDir)) {
-        // load the entity contents
+        // load the factory contents
         const factoryInterfaceContents = await generateFactoryInterfaceContents(factoryName);
         const factoryClassContent = await generateFactoryContents(factoryName);
         const factoryDirPath = factoryDirectoryPath(factoryName, moduleName, rootDir);
@@ -531,9 +531,17 @@ export const createEvent = async (eventName: string, moduleName: string, rootDir
 
     }
     else {
-        throw new Error('Module or Entities directory not found.');
+        throw new Error('Module or Factories directory not found.');
     }
 }
+
+/**
+ * createModule()
+ * 
+ * creates a module with the specified name.
+ * @param moduleName the module name
+ * @param rootDir the root directory.
+ */
 
 export const createModule = async (moduleName: string, rootDir: string): Promise<void> => {
 
@@ -799,7 +807,7 @@ export const createRepository = async (repositoryName: string, moduleName: strin
 
     }
     else {
-        throw new Error('Module or Entities directory not found.');
+        throw new Error('Module or Repositories directory not found.');
     }
 }
 
@@ -1037,7 +1045,7 @@ export const dtoExists = async (dtoName: string, moduleName: string, rootDir: st
  * determines if the dtos directory for the specified module exists.
  * @param moduleName moduleName
  * @param rootDir the root directory.
- * @returns TRUE if the values directory exists for the specified module. FALSE otherwise.
+ * @returns TRUE if the DTO directory exists for the specified module. FALSE otherwise.
  */
 
 export const dtosDirectoryExists = async (moduleName: string, rootDir: string): Promise<boolean> => {
@@ -1051,7 +1059,7 @@ export const dtosDirectoryExists = async (moduleName: string, rootDir: string): 
  * gets the path to the dtos directory for the specified module.
  * @param moduleName the module to search in.
  * @param rootDir the root directory.
- * @returns the path to the factories directory for that module.
+ * @returns the path to the dtos directory for that module.
  */
 
 export const dtosDirectoryPath = (moduleName: string, rootDir: string): string => {
@@ -1064,7 +1072,7 @@ export const dtosDirectoryPath = (moduleName: string, rootDir: string): string =
  * determines if the dtos well exists for the specified module.
  * @param moduleName the name of the module to test.
  * @param rootDir the root project directory.
- * @returns TRUE if the values well exists. FALSE otehrwise.
+ * @returns TRUE if the dtos well exists. FALSE otehrwise.
  */
 
 export const dtosWellFileExists = async (moduleName: string, rootDir: string): Promise<boolean> => {
@@ -1101,7 +1109,7 @@ export const eventStorePath = (domainName: string, rootDir: string): string => {
  * entityClassPath()
  * 
  * gets the path to the class file of the specified entity name, in the specified module.
- * @param entityName the value name
+ * @param entityName the entity name
  * @param module the module name.
  * @param rootDir the root directory of the project.
  * @returns the class path.
@@ -1117,7 +1125,7 @@ export const entityClassPath = (entityName: string, module: string, rootDir: str
  * determines if the entitiess directory for the specified module exists.
  * @param moduleName moduleName
  * @param rootDir the root directory.
- * @returns TRUE if the values directory exists for the specified module. FALSE otherwise.
+ * @returns TRUE if the entities directory exists for the specified module. FALSE otherwise.
  */
 
 export const entitiesDirectoryExists = async (moduleName: string, rootDir: string): Promise<boolean> => {
@@ -1210,7 +1218,7 @@ export const entitiesWellFilePath = (moduleName: string, rootDir: string): strin
  * evemtClassPath()
  * 
  * gets the path to the class file of the specified event name, in the specified module.
- * @param evmtName the commandy name
+ * @param evmtName the event name
  * @param module the module name.
  * @param rootDir the root directory of the project.
  * @returns the class path.
@@ -1254,7 +1262,7 @@ export const eventExists = async (eventName: string, moduleName: string, rootDir
  * determines if the events directory for the specified module exists.
  * @param moduleName moduleName
  * @param rootDir the root directory.
- * @returns TRUE if the values directory exists for the specified module. FALSE otherwise.
+ * @returns TRUE if the events directory exists for the specified module. FALSE otherwise.
  */
 
 export const eventsDirectoryExists = async (moduleName: string, rootDir: string): Promise<boolean> => {
@@ -1268,7 +1276,7 @@ export const eventsDirectoryExists = async (moduleName: string, rootDir: string)
  * gets the path to the events directory for the specified module.
  * @param moduleName the module to search in.
  * @param rootDir the root directory.
- * @returns the path to the factories directory for that module.
+ * @returns the path to the events directory for that module.
  */
 
 export const eventsDirectoryPath = (moduleName: string, rootDir: string): string => {
@@ -1281,7 +1289,7 @@ export const eventsDirectoryPath = (moduleName: string, rootDir: string): string
  * determines if the events well exists for the specified module.
  * @param moduleName the name of the module to test.
  * @param rootDir the root project directory.
- * @returns TRUE if the values well exists. FALSE otehrwise.
+ * @returns TRUE if the events well exists. FALSE otehrwise.
  */
 
 export const eventsWellFileExists = async (moduleName: string, rootDir: string): Promise<boolean> => {
@@ -1295,6 +1303,7 @@ export const eventsWellFileExists = async (moduleName: string, rootDir: string):
  * gets the path for the events well.
  * @param moduleName the name of the module.
  * @param rootDir the root directory of the domeniere project.
+ * @returns the path to the events well for the specified module.
  */
 
 export const eventsWellFilePath = (moduleName: string, rootDir: string): string => {
@@ -1356,8 +1365,8 @@ export const eventsWellFilePath = (moduleName: string, rootDir: string): string 
  * exposeCommand()
  * 
  * adds the specified command to the module's well file.
- * @param commandName the name of the repository to export.
- * @param moduleName the module where the value resides.
+ * @param commandName the name of the command to export.
+ * @param moduleName the module where the command resides.
  * @param rootDir the project root directory.
  */
 
@@ -1383,7 +1392,7 @@ export const exposeCommand = async (commandName: string, moduleName: string, roo
  * 
  * adds the specified dto to the module's well file.
  * @param dtoName the name of the dto to export.
- * @param moduleName the module where the value resides.
+ * @param moduleName the module where the dto resides.
  * @param rootDir the project root directory.
  */
 
@@ -1433,7 +1442,7 @@ export const exposeDtosWell = async (moduleName: string, rootDir: string): Promi
  * exposeEntitiesWell()
  * 
  * exposes the entities well to the module.
- * @param moduleName the name of the module who's 
+ * @param moduleName the name of the module
  * @param rootDir the project root directory.
  */
 
@@ -1459,7 +1468,7 @@ export const exposeEntitiesWell = async (moduleName: string, rootDir: string): P
  * 
  * adds the specified entity to the module's well file.
  * @param entityName the name of the entity to export.
- * @param moduleName the module where the value resides.
+ * @param moduleName the module where the entity resides
  * @param rootDir the project root directory.
  */
 
@@ -1485,7 +1494,7 @@ export const exposeEntity = async (entityName: string, moduleName: string, rootD
  * 
  * adds the specified event to the module's well file.
  * @param evemtName the name of the evemt to export.
- * @param moduleName the module where the value resides.
+ * @param moduleName the module where the event resides.
  * @param rootDir the project root directory.
  */
 
@@ -1510,7 +1519,7 @@ export const exposeEvent = async (eventName: string, moduleName: string, rootDir
  * exposeEventsWell()
  * 
  * exposes the events well to the module.
- * @param moduleName the name of the module who's 
+ * @param moduleName the name of the module 
  * @param rootDir the project root directory.
  */
 
@@ -1536,7 +1545,7 @@ export const exposeEventsWell = async (moduleName: string, rootDir: string): Pro
  * 
  * adds the specified factory to the module's well file.
  * @param factoryName the name of the factory to export.
- * @param moduleName the module where the value resides.
+ * @param moduleName the module where the factory resides.
  * @param rootDir the project root directory.
  */
 
@@ -1614,7 +1623,7 @@ export const exposeModule = async (moduleName: string, rootDir: string = process
  * 
  * adds the specified query to the module's well file.
  * @param queryName the name of the query to export.
- * @param moduleName the module where the value resides.
+ * @param moduleName the module where the query resides.
  * @param rootDir the project root directory.
  */
 
@@ -1665,7 +1674,7 @@ export const exposeRepositoriesWell = async (moduleName: string, rootDir: string
  * 
  * adds the specified repository to the module's well file.
  * @param repositoryName the name of the repository to export.
- * @param moduleName the module where the value resides.
+ * @param moduleName the module where the repository resides.
  * @param rootDir the project root directory.
  */
 
@@ -1690,8 +1699,8 @@ export const exposeRepository = async (repositoryName: string, moduleName: strin
  * exposeSpecification()
  * 
  * adds the specified specification to the module's well file.
- * @param specificationName the name of the specificatioin to export.
- * @param moduleName the module where the value resides.
+ * @param specificationName the name of the specification to export.
+ * @param moduleName the module where the specification resides.
  * @param rootDir the project root directory.
  */
 
@@ -1759,7 +1768,7 @@ export const exposeSpecificationsWell = async (moduleName: string, rootDir: stri
         }
     }
     else {
-        throw new Error('Could not find module or Events directory.');
+        throw new Error('Could not find module or Specification directory.');
     }
 }
 
@@ -1819,7 +1828,7 @@ export const exposeValuesWell = async (moduleName: string, rootDir: string): Pro
  * factoriesDirectoryExists()
  * 
  * determines if the factories directory for the specified module exists.
- * @param moduleName moduleName
+ * @param moduleName module name
  * @param rootDir the root directory.
  * @returns TRUE if the values directory exists for the specified module. FALSE otherwise.
  */
@@ -1848,7 +1857,7 @@ export const exposeValuesWell = async (moduleName: string, rootDir: string): Pro
  * determines if the factories well exists for the specified module.
  * @param moduleName the name of the module to test.
  * @param rootDir the root project directory.
- * @returns TRUE if the values well exists. FALSE otehrwise.
+ * @returns TRUE if the factproes well exists. FALSE otehrwise.
  */
 
  export const factoriesWellFileExists = async (moduleName: string, rootDir: string): Promise<boolean> => {
@@ -1889,7 +1898,7 @@ export const exposeValuesWell = async (moduleName: string, rootDir: string): Pro
  * @param factoryName the factory name
  * @param module the module name
  * @param rootDir the root project directory.
- * @returns the path to the value object directory.
+ * @returns the path to the factories object directory.
  */
 
  export const factoryDirectoryPath = (factoryName: string, module: string, rootDir: string): string => {
@@ -1903,7 +1912,7 @@ export const exposeValuesWell = async (moduleName: string, rootDir: string): Pro
  * @param factoryName the factory name
  * @param moduleName the module name
  * @param rootDir the root directory.
- * @returns 
+ * @returns TRUE if the specified factory exists. FALSE otherwise.
  */
 
  export const factoryExists = async (factoryName: string, moduleName: string, rootDir: string): Promise<boolean> => {
@@ -1960,6 +1969,18 @@ export const getAbsolutePath = (segment: string): string => {
 
 export const getDomconfigFilePath = (rootDir: string): string => {
     return Path.resolve(rootDir, 'domconfig.json');
+}
+
+/**
+ * gitignorePath()
+ * 
+ * gets the path to the .gitignore file from the root.
+ * @param rootDir the root directory.
+ * @returns the path to the package.json file.
+ */
+
+export const gitignorePath = (rootDir: string): string => {
+    return Path.resolve(rootDir, '.gitignore');
 }
 
 /**
@@ -2111,10 +2132,10 @@ export const queryClassPath = (queryName: string, module: string, rootDir: strin
  * queryDirectoryPath()
  * 
  * gets the path to the query directory for the specified command and module.
- * @param queryName the command name
+ * @param queryName the query name
  * @param module the module name
  * @param rootDir the root project directory.
- * @returns the path to the repository directory.
+ * @returns the path to the query directory.
  */
 
 export const queryDirectoryPath = (queryName: string, module: string, rootDir: string): string => {
@@ -2128,7 +2149,7 @@ export const queryDirectoryPath = (queryName: string, module: string, rootDir: s
  * @param queryName the query name
  * @param moduleName the module name
  * @param rootDir the root directory.
- * @returns 
+ * @returns TRUE if the query exists. FALSE otherwise.
  */
 
 export const queryExists = async (queryName: string, moduleName: string, rootDir: string): Promise<boolean> => {
@@ -2139,9 +2160,9 @@ export const queryExists = async (queryName: string, moduleName: string, rootDir
  * repositoriesDirectoryExists()
  * 
  * determines if the repositories directory for the specified module exists.
- * @param moduleName moduleName
+ * @param moduleName module name
  * @param rootDir the root directory.
- * @returns TRUE if the values directory exists for the specified module. FALSE otherwise.
+ * @returns TRUE if the repositories directory exists for the specified module. FALSE otherwise.
  */
 
 export const repositoriesDirectoryExists = async (moduleName: string, rootDir: string): Promise<boolean> => {
@@ -2156,7 +2177,7 @@ export const repositoriesDirectoryExists = async (moduleName: string, rootDir: s
  * gets the path to the repositories directory for the specified module.
  * @param moduleName the module to search in.
  * @param rootDir the root directory.
- * @returns the path to the factories directory for that module.
+ * @returns the path to the repositories directory for that module.
  */
 
 export const repositoriesDirectoryPath = (moduleName: string, rootDir: string): string => {
@@ -2169,7 +2190,7 @@ export const repositoriesDirectoryPath = (moduleName: string, rootDir: string): 
  * determines if the repositories well exists for the specified module.
  * @param moduleName the name of the module to test.
  * @param rootDir the root project directory.
- * @returns TRUE if the values well exists. FALSE otehrwise.
+ * @returns TRUE if the repositories well exists. FALSE otehrwise.
  */
 
 export const repositoriesWellFileExists = async (moduleName: string, rootDir: string): Promise<boolean> => {
@@ -2224,7 +2245,7 @@ export const repositoryDirectoryPath = (repositoryName: string, module: string, 
  * @param repositoryName the repository name
  * @param moduleName the module name
  * @param rootDir the root directory.
- * @returns 
+ * @returns TRUE if the repository exists. FALSE otherwise.
  */
 
 export const repositoryExists = async (repositoryName: string, moduleName: string, rootDir: string): Promise<boolean> => {
@@ -2280,6 +2301,10 @@ export const scaffoldDomainDirectory = async (domainName: string, description: s
         const packageJsonPath = packagePath(rootDirectoryPath);
         const packageJsonContents = await generatePackageJsonFileContents(domainName, description, author, repository, license);
 
+        // create the gitignore file
+        const gitignoreFilePath = gitignorePath(rootDirectoryPath);
+        const gitignoreContents = await generateGitignoreFileContents();
+
         // create tsconfig file
         const tsconfigFilePath = tsconfigPath(rootDirectoryPath);
         const tsconfigContent = await generateTsconfigFileContents();
@@ -2299,6 +2324,7 @@ export const scaffoldDomainDirectory = async (domainName: string, description: s
         await writeFile(tsconfigFilePath, tsconfigContent);
         await writeFile(domconfigFilePath, domconfigContents);
         await writeFile(indexFilePath, indexContents);
+        await writeFile(gitignoreFilePath, gitignoreContents);
 
         // src directory
         await makeDirectory(srcDirectory);
@@ -2320,9 +2346,9 @@ export const scaffoldDomainDirectory = async (domainName: string, description: s
  * servicesDirectoryExists()
  * 
  * determines if the services directory for the specified module exists.
- * @param moduleName moduleName
+ * @param moduleName module name
  * @param rootDir the root directory.
- * @returns TRUE if the values directory exists for the specified module. FALSE otherwise.
+ * @returns TRUE if the services directory exists for the specified module. FALSE otherwise.
  */
 
 export const servicesDirectoryExists = async (moduleName: string, rootDir: string): Promise<boolean> => {
@@ -2330,15 +2356,13 @@ export const servicesDirectoryExists = async (moduleName: string, rootDir: strin
     return await pathExists(dirPath);
 }
 
-
-
 /**
  * servicesDirectoryPath()
  * 
  * gets the path to the services directory for the specified module.
  * @param moduleName the module to search in.
  * @param rootDir the root directory.
- * @returns the path to the factories directory for that module.
+ * @returns the path to the services directory for that module.
  */
 
 export const servicesDirectoryPath = (moduleName: string, rootDir: string): string => {
@@ -2351,7 +2375,7 @@ export const servicesDirectoryPath = (moduleName: string, rootDir: string): stri
  * determines if the services well exists for the specified module.
  * @param moduleName the name of the module to test.
  * @param rootDir the root project directory.
- * @returns TRUE if the values well exists. FALSE otehrwise.
+ * @returns TRUE if the services well exists. FALSE otehrwise.
  */
 
 export const servicesWellFileExists = async (moduleName: string, rootDir: string): Promise<boolean> => {
@@ -2375,7 +2399,7 @@ export const servicesWellFilePath = (moduleName: string, rootDir: string): strin
  * specificationClassPath()
  * 
  * gets the path to the class file of the specified specification name, in the specified module.
- * @param specificationName the commandy name
+ * @param specificationName the specification name
  * @param module the module name.
  * @param rootDir the root directory of the project.
  * @returns the class path.
@@ -2392,7 +2416,7 @@ export const specificationClassPath = (specificationName: string, module: string
  * @param specificationName the specification name
  * @param module the module name
  * @param rootDir the root project directory.
- * @returns the path to the repository directory.
+ * @returns the path to the specification directory.
  */
 
 export const specificationDirectoryPath = (specificationName: string, module: string, rootDir: string): string => {
@@ -2406,7 +2430,7 @@ export const specificationDirectoryPath = (specificationName: string, module: st
  * @param specificationName the specification name
  * @param moduleName the module name
  * @param rootDir the root directory.
- * @returns 
+ * @returns TRUE if the specification exists. FALSE otherwise.
  */
 
 export const specificationExists = async (specificationName: string, moduleName: string, rootDir: string): Promise<boolean> => {
@@ -2417,7 +2441,7 @@ export const specificationExists = async (specificationName: string, moduleName:
  * specificationsDirectoryExists()
  * 
  * determines if the specifications directory for the specified module exists.
- * @param moduleName moduleName
+ * @param moduleName module name
  * @param rootDir the root directory.
  * @returns TRUE if the values directory exists for the specified module. FALSE otherwise.
  */
@@ -2433,7 +2457,7 @@ export const specificationsDirectoryExists = async (moduleName: string, rootDir:
  * gets the path to the specifications directory for the specified module.
  * @param moduleName the module to search in.
  * @param rootDir the root directory.
- * @returns the path to the factories directory for that module.
+ * @returns the path to the specifications directory for that module.
  */
 
 export const specificationsDirectoryPath = (moduleName: string, rootDir: string): string => {
@@ -2446,7 +2470,7 @@ export const specificationsDirectoryPath = (moduleName: string, rootDir: string)
  * determines if the specifications well exists for the specified module.
  * @param moduleName the name of the module to test.
  * @param rootDir the root project directory.
- * @returns TRUE if the values well exists. FALSE otehrwise.
+ * @returns TRUE if the specifications well exists. FALSE otehrwise.
  */
 
 export const specificationsWellFileExists = async (moduleName: string, rootDir: string): Promise<boolean> => {
@@ -2511,7 +2535,7 @@ export const valueClassPath = (valueName: string, module: string, rootDir: strin
  * @param valueName the value name
  * @param moduleName the module name
  * @param rootDir the root directory.
- * @returns 
+ * @returns TRUE if the value exists. FALSE otherwise.
  */
 
 export const valueExists = async (valueName: string, moduleName: string, rootDir: string): Promise<boolean> => {
@@ -2536,7 +2560,7 @@ export const valueInterfacePath = (valueName: string, module: string, rootDir: s
  * valuesDirectoryExists()
  * 
  * determines if the values directory for the specified module exists.
- * @param moduleName moduleName
+ * @param moduleName module name
  * @param rootDir the root directory.
  * @returns TRUE if the values directory exists for the specified module. FALSE otherwise.
  */

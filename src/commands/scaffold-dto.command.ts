@@ -32,8 +32,7 @@ import {
 export class ScaffoldDtoCommand extends Command {
 
     static paths = [
-        ['generate', 'dto'],
-        ['g', 'dto']
+        ['create', 'dto'],
     ];
 
     // ===================================================
@@ -62,7 +61,7 @@ export class ScaffoldDtoCommand extends Command {
 
     static usage = {
         category: 'Templates',
-        description: "Generates a DTO",
+        description: "Creates a DTO",
         details: "Creates a DTO inside the specified module.",
     }
 
@@ -82,7 +81,7 @@ export class ScaffoldDtoCommand extends Command {
                 throw new Error(`Module ${formatClassName(this.module)} does not exist.`);
             }
 
-            // make sure the specification does not already exist
+            // make sure the dto does not already exist
             if (await dtoExists(this.dtoName, this.module, process.cwd())) {
                 throw new Error(`DTO ${formatClassName(this.dtoName)}Data already exists in module ${formatClassName(this.module)}`);
             }
@@ -95,7 +94,7 @@ export class ScaffoldDtoCommand extends Command {
         }
 
         // create the data
-        startSpinner(formatLogInfo("Writing data files..."));
+        startSpinner(formatLogInfo("Writing Dto files..."));
         try {
             // create the data directory if it does not already exist.
             if (!await dtosDirectoryExists(this.module, process.cwd())) {
@@ -110,7 +109,7 @@ export class ScaffoldDtoCommand extends Command {
             // add the dto to the dtos well
             await exposeDto(this.dtoName, this.module, process.cwd());
 
-            stopSpinnerWithSuccess(formatLogInfo("Successfully written Data files."));
+            stopSpinnerWithSuccess(formatLogInfo("Successfully created Dto files."));
             this.context.stdout.write(formatLogInfo(`Successfully created Dto ${formatClassName(this.dtoName)}Data in module ${formatClassName(this.module)}\n`));
             return 0;
         }

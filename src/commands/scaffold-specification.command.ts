@@ -34,8 +34,7 @@ import {
 export class ScaffoldSpecificationCommand extends Command {
 
     static paths = [
-        ['generate', 'specification'],
-        ['g', 'specification']
+        ['create', 'specification'],
     ];
 
     // ===================================================
@@ -64,7 +63,7 @@ export class ScaffoldSpecificationCommand extends Command {
 
     static usage = {
         category: 'Templates',
-        description: "Generates an Specification",
+        description: "Creates a Specification",
         details: "Creates a Specification inside the specified module.",
     }
 
@@ -97,7 +96,7 @@ export class ScaffoldSpecificationCommand extends Command {
         }
 
         // create the event
-        startSpinner(formatLogInfo("Writing Specification files..."));
+        startSpinner(formatLogInfo("Writing specification files..."));
         try {
             // create the specifications directory if it does not already exist.
             if (!await specificationsDirectoryExists(this.module, process.cwd())) {
@@ -112,8 +111,8 @@ export class ScaffoldSpecificationCommand extends Command {
             // add the specification to the specifications well
             await exposeSpecification(this.specificationName, this.module, process.cwd());
 
-            stopSpinnerWithSuccess(formatLogInfo("Successfully written specification files."));
-            this.context.stdout.write(formatLogInfo(`Successfully created Event ${formatClassName(this.specificationName)}Specification in module ${formatClassName(this.module)}\n`));
+            stopSpinnerWithSuccess(formatLogInfo("Successfully created specification files."));
+            this.context.stdout.write(formatLogInfo(`Successfully created specification ${formatClassName(this.specificationName)}Specification in module ${formatClassName(this.module)}\n`));
             return 0;
         }
         catch (e) {

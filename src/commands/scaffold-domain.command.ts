@@ -39,7 +39,7 @@ export class ScaffoldDomainCommand extends Command {
 
     // This information is shown on the help command.
     static usage = {
-        category: 'Domains',
+        //category: 'Domains',
         description: "Creates a Domeniere domain.",
         details: "Creates a new Domeniere Domain.",
     }

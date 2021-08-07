@@ -30,7 +30,9 @@ import {
 
 export class ScaffoldModuleCommand extends Command {
 
-    static paths = [['generate', 'module'], ['g', 'module']];
+    static paths = [
+        ['create', 'module'],
+    ];
 
     // arguments.
     moduleName = Option.String({ required: true, name: 'domain-name', validator: t.isString() });
@@ -38,7 +40,7 @@ export class ScaffoldModuleCommand extends Command {
     // This information is shown on the help command.
     static usage = {
         category: 'Templates',
-        description: "Generates a Module",
+        description: "Creates a Module",
         details: "Creates a Module within an existing domain.",
     }
 

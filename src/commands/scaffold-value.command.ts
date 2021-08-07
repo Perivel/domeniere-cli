@@ -33,8 +33,7 @@ import {
 export class ScaffoldValueCommand extends Command {
 
     static paths = [
-        ['generate', 'value'],
-        ['g', 'value']
+        ['create', 'value'],
     ];
 
     // ===================================================
@@ -71,7 +70,7 @@ export class ScaffoldValueCommand extends Command {
 
     static usage = {
         category: 'Templates',
-        description: "Generates a Value",
+        description: "Creates a Value",
         details: "Creates a value object inside the specified module.",
     }
 
@@ -119,7 +118,7 @@ export class ScaffoldValueCommand extends Command {
             // add the value to the values well
             await exposeValue(this.valueName, this.module, process.cwd());
 
-            stopSpinnerWithSuccess(formatLogInfo("Successfully written value files."));
+            stopSpinnerWithSuccess(formatLogInfo("Successfully created value files."));
             this.context.stdout.write(formatLogInfo(`Successfully created value ${formatClassName(this.valueName)} in module ${formatClassName(this.module)}\n`));
             return 0;
         }

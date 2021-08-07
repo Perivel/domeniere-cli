@@ -33,8 +33,7 @@ import {
 export class ScaffoldRepositoryCommand extends Command {
 
     static paths = [
-        ['generate', 'repository'],
-        ['g', 'repository']
+        ['create', 'repository'],
     ];
 
     // ===================================================
@@ -52,7 +51,7 @@ export class ScaffoldRepositoryCommand extends Command {
     /**
      * module
      * 
-     * the module where the value will be added.
+     * the module where the repository will be added.
      */
 
     module = Option.String({ required: true, name: 'module', validator: t.isString() });
@@ -71,7 +70,7 @@ export class ScaffoldRepositoryCommand extends Command {
 
     static usage = {
         category: 'Templates',
-        description: "Generates a Repository",
+        description: "Creates a Repository",
         details: "Creates a Repository inside the specified module.",
     }
 
@@ -113,13 +112,13 @@ export class ScaffoldRepositoryCommand extends Command {
                 await exposeRepositoriesWell(this.module, process.cwd());
             }
 
-            // create the value
+            // create the repository
             await createRepository(this.repositoryName, this.module, process.cwd(), this.identity);
 
-            // add the value to the values well
+            // add the repository to the repository well
             await exposeRepository(this.repositoryName, this.module, process.cwd());
 
-            stopSpinnerWithSuccess(formatLogInfo("Successfully written Repository files."));
+            stopSpinnerWithSuccess(formatLogInfo("Successfully created repository files."));
             this.context.stdout.write(formatLogInfo(`Successfully created repository ${formatClassName(this.repositoryName)}Repository in module ${formatClassName(this.module)}\n`));
             return 0;
         }

@@ -32,7 +32,7 @@ import {
 export class ScaffoldFactoryCommand extends Command {
 
     static paths = [
-        ['generate', 'factory'],
+        ['create', 'factory'],
         ['g', 'factory']
     ];
 
@@ -43,7 +43,7 @@ export class ScaffoldFactoryCommand extends Command {
     /**
      * factoryName
      * 
-     * The name of the value.
+     * The name of the factory
      */
 
     factoryName = Option.String({ required: true, name: 'name', validator: t.isString()});
@@ -51,7 +51,7 @@ export class ScaffoldFactoryCommand extends Command {
     /**
      * module
      * 
-     * the module where the value will be added.
+     * the module where the factory will be added.
      */
 
     module = Option.String({ required: true, name: 'module', validator: t.isString()});
@@ -62,7 +62,7 @@ export class ScaffoldFactoryCommand extends Command {
 
     static usage = {
         category: 'Templates',
-        description: "Generates a Factory",
+        description: "Creates a Factory",
         details: "Creates a factory inside the specified module.",
     }
 
@@ -107,10 +107,10 @@ export class ScaffoldFactoryCommand extends Command {
             // create the factory
             await createFactory(this.factoryName, this.module, process.cwd());
 
-            // add the factories to the values well
+            // add the factories to the factories well
             await exposeFactory(this.factoryName, this.module, process.cwd());
 
-            stopSpinnerWithSuccess(formatLogInfo("Successfully wrote factory files."));
+            stopSpinnerWithSuccess(formatLogInfo("Successfully created factory files."));
             this.context.stdout.write(formatLogInfo(`Successfully created factory ${formatClassName(this.factoryName)}Factory in module ${formatClassName(this.module)}\n`));
             return 0;
         }

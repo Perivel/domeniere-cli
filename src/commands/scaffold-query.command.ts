@@ -33,8 +33,7 @@ import {
 export class ScaffoldQueryCommand extends Command {
 
     static paths = [
-        ['generate', 'query'],
-        ['g', 'query']
+        ['create', 'query'],
     ];
 
     // ===================================================
@@ -52,7 +51,7 @@ export class ScaffoldQueryCommand extends Command {
     /**
      * module
      * 
-     * the module where the value will be added.
+     * the module where the create will be added.
      */
 
     module = Option.String({ required: true, name: 'module', validator: t.isString() });
@@ -63,7 +62,7 @@ export class ScaffoldQueryCommand extends Command {
 
     static usage = {
         category: 'Templates',
-        description: "Generates an Query",
+        description: "Creates an Query",
         details: "Creates a Query inside the specified module.",
     }
 
@@ -96,7 +95,7 @@ export class ScaffoldQueryCommand extends Command {
         }
 
         // create the query
-        startSpinner(formatLogInfo("Writing Command files..."));
+        startSpinner(formatLogInfo("Writing query files..."));
         try {
             // create the services directory if it does not already exist.
             if (!await servicesDirectoryExists(this.module, process.cwd())) {
@@ -105,13 +104,13 @@ export class ScaffoldQueryCommand extends Command {
                 await exposeServicesWell(this.module, process.cwd());
             }
 
-            // create the command
+            // create the query
             await createQuery(this.queryName, this.module, process.cwd());
 
-            // add the command to the values well
+            // add the query to the services well
             await exposeQuery(this.queryName, this.module, process.cwd());
 
-            stopSpinnerWithSuccess(formatLogInfo("Successfully written query files."));
+            stopSpinnerWithSuccess(formatLogInfo("Successfully created query files."));
             this.context.stdout.write(formatLogInfo(`Successfully created Query ${formatClassName(this.queryName)}Query in module ${formatClassName(this.module)}\n`));
             return 0;
         }

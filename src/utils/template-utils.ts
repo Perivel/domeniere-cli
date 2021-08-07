@@ -8,6 +8,7 @@ const API_PATH = Path.resolve(__dirname, `..${Path.sep}..${Path.sep}`, 'template
 const EVENTSTORE_PATH = Path.resolve(__dirname, `..${Path.sep}..${Path.sep}`, 'templates', 'EVENTSTORE.template.txt');
 const PACKAGE_JSON_PATH = Path.resolve(__dirname, `..${Path.sep}..${Path.sep}`, 'templates', 'PACKAGE_JSON.template.txt');
 const TSCONFIG_PATH = Path.resolve(__dirname, `..${Path.sep}..${Path.sep}`, 'templates', 'TSCONFIG.template.txt');
+const GITIGNORE_PATH = Path.resolve(__dirname, `..${Path.sep}..${Path.sep}`, 'templates', 'GITIGNORE.template.txt');
 const DOMCONFIG_PATH = Path.resolve(__dirname, `..${Path.sep}..${Path.sep}`, 'templates', 'DOMCONFIG.template.txt');
 const INDEX_PATH = Path.resolve(__dirname, `..${Path.sep}..${Path.sep}`, 'templates', 'INDEX.template.txt');
 const MODULE_PATH = Path.resolve(__dirname, `..${Path.sep}..${Path.sep}`, 'templates', 'MODULE.template.txt');
@@ -35,8 +36,8 @@ const DTO_PATH = Path.resolve(__dirname, `..${Path.sep}..${Path.sep}`, 'template
  * generateAggregateContents()
  * 
  * generates the aggregate class contents with the specified name name.
- * @param name the name of the entity class.
- * @returns the value class contents.
+ * @param name the name of the aggregate class.
+ * @returns the aggregate class contents.
  */
 
  export const generateAggregateContents = async (name: string): Promise<string> => {
@@ -73,7 +74,7 @@ export const generateApiFileContents = async (domainName: string): Promise<strin
  * 
  * generates the command class contents with the specified name.
  * @param name the name of the command class.
- * @returns the value class contents.
+ * @returns the command class contents.
  */
 
 export const generateCommandContents = async (name: string): Promise<string> => {
@@ -105,8 +106,8 @@ export const generateDomConfigFileContents = async (domainName: string, descript
  * generateDtoContents()
  * 
  * generates the dto class contents with the specified name.
- * @param name the name of the specification class.
- * @returns the value class contents.
+ * @param name the name of the dto class.
+ * @returns the specification class contents.
  */
 
 export const generateDtoContents = async (name: string): Promise<string> => {
@@ -120,7 +121,7 @@ export const generateDtoContents = async (name: string): Promise<string> => {
  * 
  * generates the entity class contents with the specified name and identitifier value name.
  * @param name the name of the entity class.
- * @returns the value class contents.
+ * @returns the entity class contents.
  */
 
 export const generateEntityContents = async (name: string): Promise<string> => {
@@ -134,7 +135,7 @@ export const generateEntityContents = async (name: string): Promise<string> => {
  * generateEventContents()
  * 
  * generates the event class contents with the specified name.
- * @param name the name of the entity class.
+ * @param name the name of the event class.
  * @returns the event class contents.
  */
 
@@ -157,8 +158,8 @@ export const generateEventContents = async (name: string, rootDir: string, broad
  * generateFactoryContents()
  * 
  * generates the factory class contents with the specified name.
- * @param name the name of the value class.
- * @returns the value class contents.
+ * @param name the name of the factory class.
+ * @returns the factory class contents.
  */
 
  export const generateFactoryContents = async (name: string): Promise<string> => {
@@ -166,6 +167,18 @@ export const generateEventContents = async (name: string, rootDir: string, broad
     return template.toString()
         .replace(/__FACTORY_NAME__/g, formatClassName(name))
         .replace(/__FACTORY_PATH__/g, formatDirectoryOrFileName(name));
+}
+
+/**
+ * generateGitignoreFileContents()
+ * 
+ * generates the default .gitignore file contents.
+ * @returns the gitignore file contents
+ */
+
+export const generateGitignoreFileContents = async (): Promise<string> => {
+    const template = await readFile(GITIGNORE_PATH);
+    return template.toString();
 }
 
 /**
@@ -220,8 +233,8 @@ export const generateEventStoreFileContents = async (domainName: string): Promis
  * generateIdentityRepositoryContents()
  * 
  * generates the identity repository class contents with the specified name.
- * @param name the name of the value class.
- * @returns the value class contents.
+ * @param name the name of the repository class.
+ * @returns the repository class contents.
  */
 
 export const generateIdentityRepositoryContents = async (name: string): Promise<string> => {
@@ -317,7 +330,7 @@ export const generatePackageJsonFileContents = async (domainName: string, descri
  * 
  * generates the query class contents with the specified name.
  * @param name the name of the query class.
- * @returns the value class contents.
+ * @returns the query class contents.
  */
 
 export const generateQueryContents = async (name: string): Promise<string> => {
@@ -330,8 +343,8 @@ export const generateQueryContents = async (name: string): Promise<string> => {
  * generateRepositoryContents()
  * 
  * generates the repository class contents with the specified name.
- * @param name the name of the value class.
- * @returns the value class contents.
+ * @param name the name of the repository class.
+ * @returns the repository class contents.
  */
 
 export const generateRepositoryContents = async (name: string): Promise<string> => {
@@ -360,7 +373,7 @@ export const generateRepositoryInterfaceContents = async (name: string): Promise
  * 
  * generates the command class contents with the specified name.
  * @param name the name of the specification class.
- * @returns the value class contents.
+ * @returns the specification class contents.
  */
 
 export const generateSpecificationContents = async (name: string): Promise<string> => {
@@ -374,8 +387,8 @@ export const generateSpecificationContents = async (name: string): Promise<strin
  * generateTimestampAggregateContents()
  * 
  * generates the timestamped aggregate class contents with the specified name name.
- * @param name the name of the entity class.
- * @returns the value class contents.
+ * @param name the name of the aggregate class.
+ * @returns the aggregate class contents.
  */
 
  export const generateTimestampedAggregateContents = async (name: string): Promise<string> => {
@@ -391,7 +404,7 @@ export const generateSpecificationContents = async (name: string): Promise<strin
  * 
  * generates the timestamped entity class contents with the specified name and identitifier value name.
  * @param name the name of the entity class.
- * @returns the value class contents.
+ * @returns the entity class contents.
  */
 
 export const generateTimestampedEntityContents = async (name: string): Promise<string> => {

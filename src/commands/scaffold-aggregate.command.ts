@@ -32,8 +32,7 @@ import {
 export class ScaffoldAggregateCommand extends Command {
 
     static paths = [
-        ['generate', 'aggregate'],
-        ['g', 'aggregate']
+        ['create', 'aggregate'],
     ];
 
     // ===================================================
@@ -51,7 +50,7 @@ export class ScaffoldAggregateCommand extends Command {
     /**
      * module
      * 
-     * the module where the value will be added.
+     * the module where the aggregate will be added.
      */
 
     module = Option.String({ required: true, name: 'module', validator: t.isString() });
@@ -70,7 +69,7 @@ export class ScaffoldAggregateCommand extends Command {
 
     static usage = {
         category: 'Templates',
-        description: "Generates an Aggregate",
+        description: "Creates an Aggregate",
         details: "Creates an Aggregate inside the specified module.",
     }
 
@@ -112,13 +111,13 @@ export class ScaffoldAggregateCommand extends Command {
                 await exposeAggregatesWell(this.module, process.cwd());
             }
 
-            // create the value
+            // create the aggregate
             await createAggregate(this.aggregateName, this.module, process.cwd(), this.timestamped);
 
-            // add the value to the values well
+            // add the aggregate to the values well
             await exposeAggregate(this.aggregateName, this.module, process.cwd());
 
-            stopSpinnerWithSuccess(formatLogInfo("Successfully written aggregate files."));
+            stopSpinnerWithSuccess(formatLogInfo("Successfully created aggregate files.."));
             this.context.stdout.write(formatLogInfo(`Successfully created aggregate ${formatClassName(this.aggregateName)} in module ${formatClassName(this.module)}\n`));
             return 0;
         }

@@ -32,8 +32,7 @@ import {
 export class ScaffoldEventCommand extends Command {
 
     static paths = [
-        ['generate', 'event'],
-        ['g', 'event']
+        ['create', 'event'],
     ];
 
     // ===================================================
@@ -51,7 +50,7 @@ export class ScaffoldEventCommand extends Command {
     /**
      * module
      * 
-     * the module where the value will be added.
+     * the module where the event will be added.
      */
 
     module = Option.String({ required: true, name: 'module', validator: t.isString() });
@@ -70,7 +69,7 @@ export class ScaffoldEventCommand extends Command {
 
     static usage = {
         category: 'Templates',
-        description: "Generates an Event",
+        description: "Create an Event",
         details: "Creates an Event inside the specified module.",
     }
 
@@ -115,10 +114,10 @@ export class ScaffoldEventCommand extends Command {
             // create the event
             await createEvent(this.eventName, this.module, process.cwd(), !this.noBroadcast);
 
-            // add the event to the values well
+            // add the event to the events well
             await exposeEvent(this.eventName, this.module, process.cwd());
 
-            stopSpinnerWithSuccess(formatLogInfo("Successfully written query files."));
+            stopSpinnerWithSuccess(formatLogInfo("Successfully created event files."));
             this.context.stdout.write(formatLogInfo(`Successfully created Event ${formatClassName(this.eventName)} in module ${formatClassName(this.module)}\n`));
             return 0;
         }

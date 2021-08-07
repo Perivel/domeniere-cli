@@ -32,8 +32,7 @@ import {
 export class ScaffoldCommandCommand extends Command {
 
     static paths = [
-        ['generate', 'command'],
-        ['g', 'command']
+        ['create', 'command'],
     ];
 
     // ===================================================
@@ -41,9 +40,9 @@ export class ScaffoldCommandCommand extends Command {
     // ===================================================
 
     /**
-     * entityName
+     * commandName
      * 
-     * The name of the entity
+     * The name of the command
      */
 
     commandName = Option.String({ required: true, name: 'name', validator: t.isString() });
@@ -51,7 +50,7 @@ export class ScaffoldCommandCommand extends Command {
     /**
      * module
      * 
-     * the module where the value will be added.
+     * the module where the command will be added.
      */
 
     module = Option.String({ required: true, name: 'module', validator: t.isString() });
@@ -62,7 +61,7 @@ export class ScaffoldCommandCommand extends Command {
 
     static usage = {
         category: 'Templates',
-        description: "Generates an Command",
+        description: "Creates a Command",
         details: "Creates a Command inside the specified module.",
     }
 
@@ -110,7 +109,7 @@ export class ScaffoldCommandCommand extends Command {
             // add the command to the values well
             await exposeCommand(this.commandName, this.module, process.cwd());
 
-            stopSpinnerWithSuccess(formatLogInfo("Successfully written command files."));
+            stopSpinnerWithSuccess(formatLogInfo("Successfully created command files."));
             this.context.stdout.write(formatLogInfo(`Successfully created Command ${formatClassName(this.commandName)}Command in module ${formatClassName(this.module)}\n`));
             return 0;
         }

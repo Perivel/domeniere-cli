@@ -11,9 +11,7 @@ import {
     exposeEntitiesWell, 
     exposeEntity, 
     isDomeniereProject, 
-    moduleExists,
-    valueExists
-} from "../utils/directory-utils";
+    moduleExists} from "../utils/directory-utils";
 import { 
     formatClassName, 
     formatLogError, 
@@ -34,8 +32,7 @@ import {
 export class ScaffoldEntityCommand extends Command {
 
     static paths = [
-        ['generate', 'entity'],
-        ['g', 'entity']
+        ['create', 'entity'],
     ];
 
     // ===================================================
@@ -53,7 +50,7 @@ export class ScaffoldEntityCommand extends Command {
     /**
      * module
      * 
-     * the module where the value will be added.
+     * the module where the entity will be added.
      */
 
     module = Option.String({ required: true, name: 'module', validator: t.isString() });
@@ -72,7 +69,7 @@ export class ScaffoldEntityCommand extends Command {
 
     static usage = {
         category: 'Templates',
-        description: "Generates an Entity",
+        description: "Creates an Entity",
         details: "Creates an Entity inside the specified module.",
     }
 
@@ -104,23 +101,23 @@ export class ScaffoldEntityCommand extends Command {
             return 1;
         }
 
-        // create the value.
+        // create the Entity
         startSpinner(formatLogInfo("Writing Entity files..."));
         try {
             // create the entities directory if it does not already exist.
             if (!await entitiesDirectoryExists(this.module, process.cwd())) {
-                // create the values directory.
+                // create the entities directory.
                 await createEntitiesDirectoryForModule(this.module, process.cwd());
                 await exposeEntitiesWell(this.module, process.cwd());
             }
 
-            // create the value
+            // create the entity
             await createEntity(this.entityName, this.module, process.cwd(), this.timestamped);
 
-            // add the value to the values well
+            // add the entity to the values well
             await exposeEntity(this.entityName, this.module, process.cwd());
 
-            stopSpinnerWithSuccess(formatLogInfo("Successfully written entity files."));
+            stopSpinnerWithSuccess(formatLogInfo("Successfully created entity files."));
             this.context.stdout.write(formatLogInfo(`Successfully created Entity ${formatClassName(this.entityName)} in module ${formatClassName(this.module)}\n`));
             return 0;
         }

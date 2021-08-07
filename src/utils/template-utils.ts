@@ -28,6 +28,8 @@ const IDENTITY_REPOSITORY_PATH = Path.resolve(__dirname, `..${Path.sep}..${Path.
 const COMMAND_PATH = Path.resolve(__dirname, `..${Path.sep}..${Path.sep}`, 'templates', 'COMMAND.template.txt');
 const QUERY_PATH = Path.resolve(__dirname, `..${Path.sep}..${Path.sep}`, 'templates', 'QUERY.template.txt');
 const EVENT_PATH = Path.resolve(__dirname, `..${Path.sep}..${Path.sep}`, 'templates', 'EVENT.template.txt');
+const SPECIFICATION_PATH = Path.resolve(__dirname, `..${Path.sep}..${Path.sep}`, 'templates', 'SPECIFICATION.template.txt');
+const DTO_PATH = Path.resolve(__dirname, `..${Path.sep}..${Path.sep}`, 'templates', 'DTO.template.txt');
 
 /**
  * generateAggregateContents()
@@ -100,6 +102,20 @@ export const generateDomConfigFileContents = async (domainName: string, descript
 }
 
 /**
+ * generateDtoContents()
+ * 
+ * generates the dto class contents with the specified name.
+ * @param name the name of the specification class.
+ * @returns the value class contents.
+ */
+
+export const generateDtoContents = async (name: string): Promise<string> => {
+    const template = await readFile(DTO_PATH);
+    return template.toString()
+        .replace(/__DTO_NAME__/g, formatClassName(name));
+}
+
+/**
  * generateEntityContents()
  * 
  * generates the entity class contents with the specified name and identitifier value name.
@@ -126,7 +142,7 @@ export const generateEventContents = async (name: string, rootDir: string, broad
     const domconfig = await loadDomConfigFileContents(rootDir);
 
     if (!domconfig.name) {
-        throw new Error('Invalid nvalid domain name.');
+        throw new Error('Invalid domain name.');
     }
 
     const template = await readFile(EVENT_PATH);
@@ -337,6 +353,20 @@ export const generateRepositoryInterfaceContents = async (name: string): Promise
     const template = await readFile(REPOSITORY_INTERFACE_PATH);
     return template.toString()
         .replace(/__NAME__/g, formatClassName(name));
+}
+
+/**
+ * generateSpecificationContents()
+ * 
+ * generates the command class contents with the specified name.
+ * @param name the name of the specification class.
+ * @returns the value class contents.
+ */
+
+export const generateSpecificationContents = async (name: string): Promise<string> => {
+    const template = await readFile(SPECIFICATION_PATH);
+    return template.toString()
+        .replace(/__SPECIFICATION_NAME__/g, formatClassName(name));
 }
 
 

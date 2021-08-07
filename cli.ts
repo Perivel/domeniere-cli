@@ -12,7 +12,9 @@ import {
     ScaffoldRepositoryCommand,
     ScaffoldCommandCommand,
     ScaffoldQueryCommand,
-    ScaffoldEventCommand
+    ScaffoldEventCommand,
+    ScaffoldSpecificationCommand,
+    ScaffoldDtoCommand
 } from './src/commands/commands.well';
 
 const [node, app, ...args] = process.argv;
@@ -23,16 +25,18 @@ const cli = new Cli({
     binaryVersion: config.version,
 });
 
-cli.register(ScaffoldDomainCommand);
-cli.register(ScaffoldModuleCommand);
-cli.register(ScaffoldValueCommand);
-cli.register(ScaffoldEntityCommand);
 cli.register(ScaffoldAggregateCommand);
-cli.register(ScaffoldFactoryCommand);
-cli.register(ScaffoldRepositoryCommand);
 cli.register(ScaffoldCommandCommand);
-cli.register(ScaffoldQueryCommand);
+cli.register(ScaffoldDomainCommand);
+cli.register(ScaffoldDtoCommand);
+cli.register(ScaffoldEntityCommand);
 cli.register(ScaffoldEventCommand);
+cli.register(ScaffoldFactoryCommand);
+cli.register(ScaffoldModuleCommand);
+cli.register(ScaffoldQueryCommand);
+cli.register(ScaffoldRepositoryCommand);
+cli.register(ScaffoldSpecificationCommand);
+cli.register(ScaffoldValueCommand);
 
 cli.register(Builtins.VersionCommand);
 cli.register(Builtins.HelpCommand);

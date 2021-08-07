@@ -9,3 +9,5 @@ export * from './scaffold-repository.command';
 export * from './scaffold-command.command';
 export * from './scaffold-query.command';
 export * from './scaffold-event.command';
+export * from './scaffold-specification.command';
+export * from './scaffold-dto.command';

@@ -9,6 +9,7 @@ export const readFile = Util.promisify(FileSystem.readFile);
 export const writeFile = Util.promisify(FileSystem.writeFile);
 export const appendFile = Util.promisify(FileSystem.appendFile);
 export const destroyDirectory = Util.promisify(FileSystem.rm);
+export const destroyFile = Util.promisify(FileSystem.unlink);
 
 // custom functions
 const getFileInfo = Util.promisify(FileSystem.stat);

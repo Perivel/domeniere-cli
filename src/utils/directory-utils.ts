@@ -2,6 +2,7 @@ import * as Path from 'path';
 import { 
     appendFile, 
     destroyDirectory, 
+    destroyFile, 
     dirExists, 
     isDirectory, 
     makeDirectory, 
@@ -13,6 +14,7 @@ import {
     generateApiFileContents, 
     generateCommandContents, 
     generateDomConfigFileContents, 
+    generateDtoContents, 
     generateEntityContents, 
     generateEventContents, 
     generateEventStoreFileContents,
@@ -28,6 +30,7 @@ import {
     generateQueryContents,
     generateRepositoryContents,
     generateRepositoryInterfaceContents,
+    generateSpecificationContents,
     generateTimestampedAggregateContents,
     generateTimestampedEntityContents,
     generateTsconfigFileContents,
@@ -331,6 +334,76 @@ export const createCommand = async (commandName: string, moduleName: string, roo
     }
     else {
         throw new Error('Module or Entities directory not found.');
+    }
+}
+
+/**
+ * createDto()
+ * 
+ * creates a DTO
+ * @param dtoName the specification name.
+ * @param moduleName the module name.
+ * @param rootDir the root directory.
+ */
+
+export const createDto = async (dtoName: string, moduleName: string, rootDir: string): Promise<void> => {
+    // make sure the module and dtos directories exists.
+    if (await moduleExists(moduleName, rootDir) && await dtosDirectoryExists(moduleName, rootDir)) {
+        // load the specification contents
+        const dtoClassContent = await generateDtoContents(dtoName);
+        const dtoClassFilePath = dtoClassPath(dtoName, moduleName, rootDir);
+
+        // create the files.
+        try {
+            await writeFile(dtoClassFilePath, dtoClassContent);
+        }
+        catch (e) {
+            // failed to write files. Undo the operation.
+            await destroyFile(dtoClassFilePath);
+
+            return e;
+        }
+
+    }
+    else {
+        throw new Error('Module or Data directory not found.');
+    }
+}
+
+/**
+ * createDtosDirectoryForModule()
+ * 
+ * creates a dtos directory for the specified module.
+ * @param moduleName the module name
+ * @param rootDir the root directory.
+ */
+
+export const createDtosDirectoryForModule = async (moduleName: string, rootDir: string): Promise<void> => {
+    if (!await dtosDirectoryExists(moduleName, rootDir)) {
+        // prepare the directory information.
+        const dtosDirectoryPathToCreate = dtosDirectoryPath(moduleName, rootDir);
+        const dtosWellFilePathToCreate = dtosWellFilePath(moduleName, rootDir);
+        const wellFileContents = await generateWellFileContents('data');
+
+        // write directory.
+        await makeDirectory(dtosDirectoryPathToCreate);
+
+        try {
+            // write well file
+            await writeFile(dtosWellFilePathToCreate, wellFileContents);
+        }
+        catch (e) {
+            // failed to create the well file.
+            await destroyDirectory(dtosDirectoryPathToCreate, {
+                recursive: true,
+                force: true,
+            });
+            throw e;
+        }
+    }
+    else {
+        // The directory already exists.
+        throw new Error(`Specifications directory for module ${formatClassName(moduleName)} already exists.`);
     }
 }
 
@@ -767,7 +840,75 @@ export const createServicesDirectoryForModule = async (moduleName: string, rootD
     }
 }
 
+/**
+ * createSpecification()
+ * 
+ * creates an specification
+ * @param specificationName the specification name.
+ * @param moduleName the module name.
+ * @param rootDir the root directory.
+ */
 
+export const createSpecification = async (specificationName: string, moduleName: string, rootDir: string): Promise<void> => {
+    // make sure the module and specifications directories exists.
+    if (await moduleExists(moduleName, rootDir) && await specificationsDirectoryExists(moduleName, rootDir)) {
+        // load the specification contents
+        const specificationClassContent = await generateSpecificationContents(specificationName);
+        const specificationClassFilePath = specificationClassPath(specificationName, moduleName, rootDir);
+
+        // create the files.
+        try {
+            await writeFile(specificationClassFilePath, specificationClassContent);
+        }
+        catch (e) {
+            // failed to write files. Undo the operation.
+            await destroyFile(specificationClassFilePath);
+
+            return e;
+        }
+
+    }
+    else {
+        throw new Error('Module or Specifications directory not found.');
+    }
+}
+
+/**
+ * createSpecificationsDirectoryForModule()
+ * 
+ * creates a specifications directory for the specified module.
+ * @param moduleName the module name
+ * @param rootDir the root directory.
+ */
+
+export const createSpecificationsDirectoryForModule = async (moduleName: string, rootDir: string): Promise<void> => {
+    if (!await specificationsDirectoryExists(moduleName, rootDir)) {
+        // prepare the directory information.
+        const specificationsDirectoryPathToCreate = specificationsDirectoryPath(moduleName, rootDir);
+        const specificationsWellFilePathToCreate = specificationsWellFilePath(moduleName, rootDir);
+        const wellFileContents = await generateWellFileContents('specifications');
+
+        // write directory.
+        await makeDirectory(specificationsDirectoryPathToCreate);
+
+        try {
+            // write well file
+            await writeFile(specificationsWellFilePathToCreate, wellFileContents);
+        }
+        catch (e) {
+            // failed to create the well file.
+            await destroyDirectory(specificationsDirectoryPathToCreate, {
+                recursive: true,
+                force: true,
+            });
+            throw e;
+        }
+    }
+    else {
+        // The directory already exists.
+        throw new Error(`Specifications directory for module ${formatClassName(moduleName)} already exists.`);
+    }
+}
 
 /**
  * createValuesDirectoryForModule()
@@ -862,6 +1003,86 @@ export const domconfigPath = (rootDir: string): string => {
     return Path.resolve(rootDir, 'domconfig.json');
 }
 
+/**
+ * dtoClassPath()
+ * 
+ * gets the path to the class file of the specified dto name, in the specified module.
+ * @param dtoName the dto name
+ * @param module the module name.
+ * @param rootDir the root directory of the project.
+ * @returns the class path.
+ */
+
+export const dtoClassPath = (dtoName: string, module: string, rootDir: string): string => {
+    return Path.resolve(dtosDirectoryPath(module, rootDir), `${formatDirectoryOrFileName(dtoName)}.data.ts`);
+}
+
+/**
+ * dtoExists()
+ * 
+ * determines if the specified dto exists in the specified module.
+ * @param dtoName the dto name
+ * @param moduleName the module name
+ * @param rootDir the root directory.
+ * @returns 
+ */
+
+export const dtoExists = async (dtoName: string, moduleName: string, rootDir: string): Promise<boolean> => {
+    return await pathExists(dtoClassPath(dtoName, moduleName, rootDir));
+}
+
+/**
+ * dtosDirectoryExists()
+ * 
+ * determines if the dtos directory for the specified module exists.
+ * @param moduleName moduleName
+ * @param rootDir the root directory.
+ * @returns TRUE if the values directory exists for the specified module. FALSE otherwise.
+ */
+
+export const dtosDirectoryExists = async (moduleName: string, rootDir: string): Promise<boolean> => {
+    const dirPath = dtosWellFilePath(moduleName, rootDir);
+    return await pathExists(dirPath);
+}
+
+/**
+ * dtosDirectoryPath()
+ * 
+ * gets the path to the dtos directory for the specified module.
+ * @param moduleName the module to search in.
+ * @param rootDir the root directory.
+ * @returns the path to the factories directory for that module.
+ */
+
+export const dtosDirectoryPath = (moduleName: string, rootDir: string): string => {
+    return Path.resolve(srcDirectoryPath(rootDir), formatDirectoryOrFileName(moduleName), 'data');
+}
+
+/**
+ * dtosWellFileExists()
+ * 
+ * determines if the dtos well exists for the specified module.
+ * @param moduleName the name of the module to test.
+ * @param rootDir the root project directory.
+ * @returns TRUE if the values well exists. FALSE otehrwise.
+ */
+
+export const dtosWellFileExists = async (moduleName: string, rootDir: string): Promise<boolean> => {
+    const dirPath = dtosWellFilePath(moduleName, rootDir);
+    return await pathExists(dirPath);
+}
+
+/**
+ * dtosWellFilePath()
+ * 
+ * gets the path for the dtos well.
+ * @param moduleName the name of the module.
+ * @param rootDir the root directory of the domeniere project.
+ */
+
+export const dtosWellFilePath = (moduleName: string, rootDir: string): string => {
+    return Path.resolve(dtosDirectoryPath(moduleName, rootDir), 'data.well.ts');
+}
 
 /**
  * eventStorePath()
@@ -1158,6 +1379,57 @@ export const exposeCommand = async (commandName: string, moduleName: string, roo
 }
 
 /**
+ * exposeDto()
+ * 
+ * adds the specified dto to the module's well file.
+ * @param dtoName the name of the dto to export.
+ * @param moduleName the module where the value resides.
+ * @param rootDir the project root directory.
+ */
+
+export const exposeDto = async (dtoName: string, moduleName: string, rootDir: string): Promise<void> => {
+    if (await moduleExists(moduleName, rootDir) && await dtosWellFileExists(moduleName, rootDir) && await dtoExists(dtoName, moduleName, rootDir)) {
+        // data
+        const wellFilePath = dtosWellFilePath(moduleName, rootDir);
+        const patherizedDtoName = formatDirectoryOrFileName(dtoName);
+        const exportLine = `\nexport * from './${patherizedDtoName}.data';`;
+
+        // append the module file.
+        if (!await fileContains(wellFilePath, exportLine)) {
+            await appendFile(wellFilePath, exportLine);
+        }
+    }
+    else {
+        throw new Error('Could not find module or Data directory.');
+    }
+}
+
+/**
+ * exposeDtosWell()
+ * 
+ * exposes the dtos well to the module.
+ * @param moduleName the name of the module who's 
+ * @param rootDir the project root directory.
+ */
+
+export const exposeDtosWell = async (moduleName: string, rootDir: string): Promise<void> => {
+
+    if (await moduleExists(moduleName, rootDir) && await dtosWellFileExists(moduleName, rootDir)) {
+        // module data
+        const modulePath = moduleFilePath(moduleName, rootDir);
+        const exportLine = `\nexport * from './data/data.well';`;
+
+        // append the module file.
+        if (!await fileContains(modulePath, exportLine)) {
+            await appendFile(modulePath, exportLine);
+        }
+    }
+    else {
+        throw new Error('Could not find module or Data directory.');
+    }
+}
+
+/**
  * exposeEntitiesWell()
  * 
  * exposes the entities well to the module.
@@ -1415,6 +1687,33 @@ export const exposeRepository = async (repositoryName: string, moduleName: strin
 }
 
 /**
+ * exposeSpecification()
+ * 
+ * adds the specified specification to the module's well file.
+ * @param specificationName the name of the specificatioin to export.
+ * @param moduleName the module where the value resides.
+ * @param rootDir the project root directory.
+ */
+
+export const exposeSpecification = async (specificationName: string, moduleName: string, rootDir: string): Promise<void> => {
+    if (await moduleExists(moduleName, rootDir) && await specificationsWellFileExists(moduleName, rootDir) && await specificationExists(specificationName, moduleName, rootDir)) {
+        // data
+        const wellFilePath = specificationsWellFilePath(moduleName, rootDir);
+        const patherizedSpecificationName = formatDirectoryOrFileName(specificationName);
+        const exportLine = `\nexport * from './${patherizedSpecificationName}.specification';`;
+
+        // append the module file.
+        if (!await fileContains(wellFilePath, exportLine)) {
+            await appendFile(wellFilePath, exportLine);
+        }
+    }
+    else {
+        throw new Error('Could not find module or specification directory.');
+    }
+}
+
+
+/**
  * exposeServicesWell()
  * 
  * exposes the services well to the module.
@@ -1436,6 +1735,31 @@ export const exposeServicesWell = async (moduleName: string, rootDir: string): P
     }
     else {
         throw new Error('Could not find module or Services directory.');
+    }
+}
+
+/**
+ * exposeSpecificationsWell()
+ * 
+ * exposes the specifications well to the module.
+ * @param moduleName the name of the module who's 
+ * @param rootDir the project root directory.
+ */
+
+export const exposeSpecificationsWell = async (moduleName: string, rootDir: string): Promise<void> => {
+
+    if (await moduleExists(moduleName, rootDir) && await specificationsWellFileExists(moduleName, rootDir)) {
+        // module data
+        const modulePath = moduleFilePath(moduleName, rootDir);
+        const exportLine = `\nexport * from './specifications/specifications.well';`;
+
+        // append the module file.
+        if (!await fileContains(modulePath, exportLine)) {
+            await appendFile(modulePath, exportLine);
+        }
+    }
+    else {
+        throw new Error('Could not find module or Events directory.');
     }
 }
 
@@ -2045,6 +2369,101 @@ export const servicesWellFileExists = async (moduleName: string, rootDir: string
 
 export const servicesWellFilePath = (moduleName: string, rootDir: string): string => {
     return Path.resolve(servicesDirectoryPath(moduleName, rootDir), 'services.well.ts');
+}
+
+/**
+ * specificationClassPath()
+ * 
+ * gets the path to the class file of the specified specification name, in the specified module.
+ * @param specificationName the commandy name
+ * @param module the module name.
+ * @param rootDir the root directory of the project.
+ * @returns the class path.
+ */
+
+export const specificationClassPath = (specificationName: string, module: string, rootDir: string): string => {
+    return Path.resolve(specificationsDirectoryPath(module, rootDir), `${formatDirectoryOrFileName(specificationName)}.specification.ts`);
+}
+
+/**
+ * specificationDirectoryPath()
+ * 
+ * gets the path to the specification directory for the specified specification and module.
+ * @param specificationName the specification name
+ * @param module the module name
+ * @param rootDir the root project directory.
+ * @returns the path to the repository directory.
+ */
+
+export const specificationDirectoryPath = (specificationName: string, module: string, rootDir: string): string => {
+    return Path.resolve(specificationsDirectoryPath(module, rootDir), `${formatDirectoryOrFileName(specificationName)}-specification`);
+}
+
+/**
+ * specificationExists()
+ * 
+ * determines if the specified specification exists in the specified module.
+ * @param specificationName the specification name
+ * @param moduleName the module name
+ * @param rootDir the root directory.
+ * @returns 
+ */
+
+export const specificationExists = async (specificationName: string, moduleName: string, rootDir: string): Promise<boolean> => {
+    return await pathExists(specificationClassPath(specificationName, moduleName, rootDir));
+}
+
+/**
+ * specificationsDirectoryExists()
+ * 
+ * determines if the specifications directory for the specified module exists.
+ * @param moduleName moduleName
+ * @param rootDir the root directory.
+ * @returns TRUE if the values directory exists for the specified module. FALSE otherwise.
+ */
+
+export const specificationsDirectoryExists = async (moduleName: string, rootDir: string): Promise<boolean> => {
+    const dirPath = specificationsWellFilePath(moduleName, rootDir);
+    return await pathExists(dirPath);
+}
+
+/**
+ * specificationsDirectoryPath()
+ * 
+ * gets the path to the specifications directory for the specified module.
+ * @param moduleName the module to search in.
+ * @param rootDir the root directory.
+ * @returns the path to the factories directory for that module.
+ */
+
+export const specificationsDirectoryPath = (moduleName: string, rootDir: string): string => {
+    return Path.resolve(srcDirectoryPath(rootDir), formatDirectoryOrFileName(moduleName), 'specifications');
+}
+
+/**
+ * specificationsWellFileExists()
+ * 
+ * determines if the specifications well exists for the specified module.
+ * @param moduleName the name of the module to test.
+ * @param rootDir the root project directory.
+ * @returns TRUE if the values well exists. FALSE otehrwise.
+ */
+
+export const specificationsWellFileExists = async (moduleName: string, rootDir: string): Promise<boolean> => {
+    const dirPath = specificationsWellFilePath(moduleName, rootDir);
+    return await pathExists(dirPath);
+}
+
+/**
+ * specificationsWellFilePath()
+ * 
+ * gets the path for the specifications well.
+ * @param moduleName the name of the module.
+ * @param rootDir the root directory of the domeniere project.
+ */
+
+export const specificationsWellFilePath = (moduleName: string, rootDir: string): string => {
+    return Path.resolve(specificationsDirectoryPath(moduleName, rootDir), 'specifications.well.ts');
 }
 
 /**

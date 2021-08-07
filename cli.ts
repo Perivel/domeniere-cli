@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-
+import * as config from './cliconfig.json';
 import { Cli, Builtins } from 'clipanion';
 import {
     ScaffoldDomainCommand,
@@ -19,9 +19,9 @@ import {
 const [node, app, ...args] = process.argv;
 
 const cli = new Cli({
-    binaryLabel: 'domeniere',
-    binaryName: 'domeniere',
-    binaryVersion: '1.0.0',
+    binaryLabel: config.name,
+    binaryName: config.binary_name,
+    binaryVersion: config.version,
 });
 
 cli.register(ScaffoldAggregateCommand);

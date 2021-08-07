@@ -1,6 +1,6 @@
 {
   "name": "domeniere-cli",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A command-line interface for the Domeniere library",
   "main": "dist/cli.js",
   "repository": "https://github.com/Perivel/domeniere-cli",
@@ -21,9 +21,10 @@
     "rimraf": "^3.0.2"
   },
   "scripts": {
-    "build": "yarn clean && tsc && yarn copy-templates",
+    "build": "yarn clean && tsc && yarn copy-config && yarn copy-templates",
     "clean": "rimraf ./dist",
-    "copy-templates": "copyfiles -u 1 templates/**/*.txt dist/templates"
+    "copy-templates": "copyfiles -u 1 templates/**/*.txt dist/templates",
+    "copy-config": "copyfiles -u 1 cliconfig.json dist"
   },
   "bin": {
     "domeniere": "./dist/cli.js"

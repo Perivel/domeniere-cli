@@ -71,7 +71,7 @@ export class ScaffoldAggregateCommand extends Command {
         category: 'Templates',
         description: "Creates an Aggregate",
         details: "Creates an Aggregate inside the specified module.",
-    }
+    };
 
     async execute(): Promise<number> {
         this.context.stdout.write(formatLogInfo('Creating Aggregate.\n'));

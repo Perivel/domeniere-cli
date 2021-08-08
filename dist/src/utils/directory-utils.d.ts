@@ -178,6 +178,23 @@ export declare const createEntity: (entityName: string, moduleName: string, root
  */
 export declare const createEvent: (eventName: string, moduleName: string, rootDir: string, broadcastEvent?: boolean) => Promise<void>;
 /**
+ * createException()
+ *
+ * creates an Exception
+ * @param exceptionName the exception name.
+ * @param moduleName the module name.
+ * @param rootDir the root directory.
+ */
+export declare const createException: (dtoName: string, moduleName: string, rootDir: string) => Promise<void>;
+/**
+ * createExceptionsDirectoryForModule()
+ *
+ * creates a exceptions directory for the specified module.
+ * @param moduleName the module name
+ * @param rootDir the root directory.
+ */
+export declare const createExceptionsDirectoryForModule: (moduleName: string, rootDir: string) => Promise<void>;
+/**
  * createFactory()
  *
  * creates an factory.
@@ -502,6 +519,61 @@ export declare const eventsWellFileExists: (moduleName: string, rootDir: string)
  */
 export declare const eventsWellFilePath: (moduleName: string, rootDir: string) => string;
 /**
+ * exceptionClassPath()
+ *
+ * gets the path to the class file of the specified exception name, in the specified module.
+ * @param exceptionName the exception name
+ * @param module the module name.
+ * @param rootDir the root directory of the project.
+ * @returns the class path.
+ */
+export declare const exceptionClassPath: (exceptionName: string, module: string, rootDir: string) => string;
+/**
+ * exceptionsDirectoryExists()
+ *
+ * determines if the exceptions directory for the specified module exists.
+ * @param moduleName moduleName
+ * @param rootDir the root directory.
+ * @returns TRUE if the DTO directory exists for the specified module. FALSE otherwise.
+ */
+export declare const exceptionsDirectoryExists: (moduleName: string, rootDir: string) => Promise<boolean>;
+/**
+ * exceptionsDirectoryPath()
+ *
+ * gets the path to the exceptions directory for the specified module.
+ * @param moduleName the module to search in.
+ * @param rootDir the root directory.
+ * @returns the path to the exceptions directory for that module.
+ */
+export declare const exceptionsDirectoryPath: (moduleName: string, rootDir: string) => string;
+/**
+ * exceptionExists()
+ *
+ * determines if the specified exception exists in the specified module.
+ * @param exceptionName the exception name
+ * @param moduleName the module name
+ * @param rootDir the root directory.
+ * @returns TRUE if the exception exists. FALSE otherwise.
+ */
+export declare const exceptionExists: (exceptionName: string, moduleName: string, rootDir: string) => Promise<boolean>;
+/**
+ * exceptionsWellFileExists()
+ *
+ * determines if the exceptions well exists for the specified module.
+ * @param moduleName the name of the module to test.
+ * @param rootDir the root project directory.
+ * @returns TRUE if the exceptions well exists. FALSE otehrwise.
+ */
+export declare const exceptionsWellFileExists: (moduleName: string, rootDir: string) => Promise<boolean>;
+/**
+ * exceptionsWellFilePath()
+ *
+ * gets the path for the exceptions well.
+ * @param moduleName the name of the module.
+ * @param rootDir the root directory of the domeniere project.
+ */
+export declare const exceptionsWellFilePath: (moduleName: string, rootDir: string) => string;
+/**
  * exposeAggregate()
  *
  * adds the specified aggregate to the module's well file.
@@ -578,6 +650,23 @@ export declare const exposeEvent: (eventName: string, moduleName: string, rootDi
  * @param rootDir the project root directory.
  */
 export declare const exposeEventsWell: (moduleName: string, rootDir: string) => Promise<void>;
+/**
+ * exposeException()
+ *
+ * adds the specified exception to the module's well file.
+ * @param exceptionName the name of the exception to export.
+ * @param moduleName the module where the dto resides.
+ * @param rootDir the project root directory.
+ */
+export declare const exposeException: (exceptionName: string, moduleName: string, rootDir: string) => Promise<void>;
+/**
+ * exposeExceptionsWell()
+ *
+ * exposes the exceptions well to the module.
+ * @param moduleName the name of the module who's
+ * @param rootDir the project root directory.
+ */
+export declare const exposeExceptionsWell: (moduleName: string, rootDir: string) => Promise<void>;
 /**
  * exposeFactory()
  *

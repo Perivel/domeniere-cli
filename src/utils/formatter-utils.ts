@@ -98,6 +98,18 @@ export const formatModuleFileName = (moduleName: string): string => {
 }
 
 /**
+ * formatTitleText()
+ * 
+ * formats a string to be suitabble for title text.
+ * @param dirty the string to format.
+ * @returns the formatted thing.
+ */
+
+export const formatTitleText = (dirty: string): string => {
+    return capitalCase(dirty).trim();
+}
+
+/**
  * formatVariableName()
  * 
  * formats the string for use as a variable name.

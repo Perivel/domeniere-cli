@@ -18,6 +18,7 @@ import {
     generateEntityContents, 
     generateEventContents, 
     generateEventStoreFileContents,
+    generateExceptionContents,
     generateFactoryContents,
     generateFactoryInterfaceContents,
     generateGitignoreFileContents,
@@ -482,6 +483,76 @@ export const createEvent = async (eventName: string, moduleName: string, rootDir
     }
     else {
         throw new Error('Module or Events directory not found.');
+    }
+}
+
+/**
+ * createException()
+ * 
+ * creates an Exception
+ * @param exceptionName the exception name.
+ * @param moduleName the module name.
+ * @param rootDir the root directory.
+ */
+
+export const createException = async (dtoName: string, moduleName: string, rootDir: string): Promise<void> => {
+    // make sure the module and exceptions directories exists.
+    if (await moduleExists(moduleName, rootDir) && await exceptionsDirectoryExists(moduleName, rootDir)) {
+        // load the exception contents
+        const exceptionClassContent = await generateExceptionContents(dtoName);
+        const exceptionClassFilePath = exceptionClassPath(dtoName, moduleName, rootDir);
+
+        // create the files.
+        try {
+            await writeFile(exceptionClassFilePath, exceptionClassContent);
+        }
+        catch (e) {
+            // failed to write files. Undo the operation.
+            await destroyFile(exceptionClassFilePath);
+
+            return e;
+        }
+
+    }
+    else {
+        throw new Error('Module or Exception directory not found.');
+    }
+}
+
+/**
+ * createExceptionsDirectoryForModule()
+ * 
+ * creates a exceptions directory for the specified module.
+ * @param moduleName the module name
+ * @param rootDir the root directory.
+ */
+
+export const createExceptionsDirectoryForModule = async (moduleName: string, rootDir: string): Promise<void> => {
+    if (!await exceptionsDirectoryExists(moduleName, rootDir)) {
+        // prepare the directory information.
+        const exceptionsDirectoryPathToCreate = exceptionsDirectoryPath(moduleName, rootDir);
+        const exceptionsWellFilePathToCreate = exceptionsWellFilePath(moduleName, rootDir);
+        const wellFileContents = await generateWellFileContents('exceptions');
+
+        // write directory.
+        await makeDirectory(exceptionsDirectoryPathToCreate);
+
+        try {
+            // write well file
+            await writeFile(exceptionsWellFilePathToCreate, wellFileContents);
+        }
+        catch (e) {
+            // failed to create the well file.
+            await destroyDirectory(exceptionsDirectoryPathToCreate, {
+                recursive: true,
+                force: true,
+            });
+            throw e;
+        }
+    }
+    else {
+        // The directory already exists.
+        throw new Error(`Exceptions directory for module ${formatClassName(moduleName)} already exists.`);
     }
 }
 
@@ -1304,6 +1375,87 @@ export const eventsWellFilePath = (moduleName: string, rootDir: string): string 
 }
 
 /**
+ * exceptionClassPath()
+ * 
+ * gets the path to the class file of the specified exception name, in the specified module.
+ * @param exceptionName the exception name
+ * @param module the module name.
+ * @param rootDir the root directory of the project.
+ * @returns the class path.
+ */
+
+export const exceptionClassPath = (exceptionName: string, module: string, rootDir: string): string => {
+    return Path.resolve(exceptionsDirectoryPath(module, rootDir), `${formatDirectoryOrFileName(exceptionName)}.exception.ts`);
+}
+
+/**
+ * exceptionsDirectoryExists()
+ * 
+ * determines if the exceptions directory for the specified module exists.
+ * @param moduleName moduleName
+ * @param rootDir the root directory.
+ * @returns TRUE if the DTO directory exists for the specified module. FALSE otherwise.
+ */
+
+export const exceptionsDirectoryExists = async (moduleName: string, rootDir: string): Promise<boolean> => {
+    const dirPath = exceptionsWellFilePath(moduleName, rootDir);
+    return await pathExists(dirPath);
+}
+
+/**
+ * exceptionsDirectoryPath()
+ * 
+ * gets the path to the exceptions directory for the specified module.
+ * @param moduleName the module to search in.
+ * @param rootDir the root directory.
+ * @returns the path to the exceptions directory for that module.
+ */
+
+export const exceptionsDirectoryPath = (moduleName: string, rootDir: string): string => {
+    return Path.resolve(srcDirectoryPath(rootDir), formatDirectoryOrFileName(moduleName), 'exceptions');
+}
+
+/**
+ * exceptionExists()
+ * 
+ * determines if the specified exception exists in the specified module.
+ * @param exceptionName the exception name
+ * @param moduleName the module name
+ * @param rootDir the root directory.
+ * @returns TRUE if the exception exists. FALSE otherwise.
+ */
+
+export const exceptionExists = async (exceptionName: string, moduleName: string, rootDir: string): Promise<boolean> => {
+    return await pathExists(exceptionClassPath(exceptionName, moduleName, rootDir));
+}
+
+/**
+ * exceptionsWellFileExists()
+ * 
+ * determines if the exceptions well exists for the specified module.
+ * @param moduleName the name of the module to test.
+ * @param rootDir the root project directory.
+ * @returns TRUE if the exceptions well exists. FALSE otehrwise.
+ */
+
+export const exceptionsWellFileExists = async (moduleName: string, rootDir: string): Promise<boolean> => {
+    const dirPath = exceptionsWellFilePath(moduleName, rootDir);
+    return await pathExists(dirPath);
+}
+
+/**
+ * exceptionsWellFilePath()
+ * 
+ * gets the path for the exceptions well.
+ * @param moduleName the name of the module.
+ * @param rootDir the root directory of the domeniere project.
+ */
+
+export const exceptionsWellFilePath = (moduleName: string, rootDir: string): string => {
+    return Path.resolve(exceptionsDirectoryPath(moduleName, rootDir), 'exceptions.well.ts');
+}
+
+/**
  * exposeAggregate()
  * 
  * adds the specified aggregate to the module's well file.
@@ -1530,6 +1682,57 @@ export const exposeEventsWell = async (moduleName: string, rootDir: string): Pro
     }
     else {
         throw new Error('Could not find module or Events directory.');
+    }
+}
+
+/**
+ * exposeException()
+ * 
+ * adds the specified exception to the module's well file.
+ * @param exceptionName the name of the exception to export.
+ * @param moduleName the module where the dto resides.
+ * @param rootDir the project root directory.
+ */
+
+export const exposeException = async (exceptionName: string, moduleName: string, rootDir: string): Promise<void> => {
+    if (await moduleExists(moduleName, rootDir) && await exceptionsWellFileExists(moduleName, rootDir) && await exceptionExists(exceptionName, moduleName, rootDir)) {
+        // data
+        const wellFilePath = exceptionsWellFilePath(moduleName, rootDir);
+        const patherizedExceptionName = formatDirectoryOrFileName(exceptionName);
+        const exportLine = `\nexport * from './${patherizedExceptionName}.exception';`;
+
+        // append the module file.
+        if (!await fileContains(wellFilePath, exportLine)) {
+            await appendFile(wellFilePath, exportLine);
+        }
+    }
+    else {
+        throw new Error('Could not find module or Exceptions directory.');
+    }
+}
+
+/**
+ * exposeExceptionsWell()
+ * 
+ * exposes the exceptions well to the module.
+ * @param moduleName the name of the module who's 
+ * @param rootDir the project root directory.
+ */
+
+export const exposeExceptionsWell = async (moduleName: string, rootDir: string): Promise<void> => {
+
+    if (await moduleExists(moduleName, rootDir) && await exceptionsWellFileExists(moduleName, rootDir)) {
+        // module data
+        const modulePath = moduleFilePath(moduleName, rootDir);
+        const exportLine = `\nexport * from './exceptions/exceptions.well';`;
+
+        // append the module file.
+        if (!await fileContains(modulePath, exportLine)) {
+            await appendFile(modulePath, exportLine);
+        }
+    }
+    else {
+        throw new Error('Could not find module or Exceptions directory.');
     }
 }
 

@@ -23,3 +23,4 @@ __exportStar(require("./scaffold-query.command"), exports);
 __exportStar(require("./scaffold-event.command"), exports);
 __exportStar(require("./scaffold-specification.command"), exports);
 __exportStar(require("./scaffold-dto.command"), exports);
+__exportStar(require("./scaffold-exception.command"), exports);

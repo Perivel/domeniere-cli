@@ -11,3 +11,4 @@ export * from './scaffold-query.command';
 export * from './scaffold-event.command';
 export * from './scaffold-specification.command';
 export * from './scaffold-dto.command';
+export * from './scaffold-exception.command';

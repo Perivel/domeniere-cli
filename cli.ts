@@ -13,7 +13,8 @@ import {
     ScaffoldQueryCommand,
     ScaffoldEventCommand,
     ScaffoldSpecificationCommand,
-    ScaffoldDtoCommand
+    ScaffoldDtoCommand,
+    ScaffoldExceptionCommand
 } from './src/commands/commands.well';
 
 const [node, app, ...args] = process.argv;
@@ -30,6 +31,7 @@ cli.register(ScaffoldDomainCommand);
 cli.register(ScaffoldDtoCommand);
 cli.register(ScaffoldEntityCommand);
 cli.register(ScaffoldEventCommand);
+cli.register(ScaffoldExceptionCommand);
 cli.register(ScaffoldFactoryCommand);
 cli.register(ScaffoldModuleCommand);
 cli.register(ScaffoldQueryCommand);

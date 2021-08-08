@@ -58,6 +58,14 @@ export declare const generateEntityContents: (name: string) => Promise<string>;
  */
 export declare const generateEventContents: (name: string, rootDir: string, broadcastEvent?: boolean) => Promise<string>;
 /**
+ * generateExceptionContents()
+ *
+ * generates the exception class contents with the specified name.
+ * @param name the name of the exception class.
+ * @returns the exception class contents.
+ */
+export declare const generateExceptionContents: (name: string) => Promise<string>;
+/**
  * generateFactoryContents()
  *
  * generates the factory class contents with the specified name.

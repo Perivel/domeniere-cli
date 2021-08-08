@@ -19,7 +19,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.generateWellFileContents = exports.generateValueContents = exports.generateTsconfigFileContents = exports.generateTimestampedEntityContents = exports.generateTimestampedAggregateContents = exports.generateSpecificationContents = exports.generateRepositoryInterfaceContents = exports.generateRepositoryContents = exports.generateQueryContents = exports.generatePackageJsonFileContents = exports.generateModuleFileContents = exports.generateInterfaceContents = exports.generateFactoryInterfaceContents = exports.generateIndexFileContents = exports.generateIdentityRepositoryContents = exports.generateEventStoreFileContents = exports.generateIdentifierValueContents = exports.generateIdentifierInterfaceContents = exports.generateGitignoreFileContents = exports.generateFactoryContents = exports.generateEventContents = exports.generateEntityContents = exports.generateDtoContents = exports.generateDomConfigFileContents = exports.generateCommandContents = exports.generateApiFileContents = exports.generateAggregateContents = void 0;
+exports.generateWellFileContents = exports.generateValueContents = exports.generateTsconfigFileContents = exports.generateTimestampedEntityContents = exports.generateTimestampedAggregateContents = exports.generateSpecificationContents = exports.generateRepositoryInterfaceContents = exports.generateRepositoryContents = exports.generateQueryContents = exports.generatePackageJsonFileContents = exports.generateModuleFileContents = exports.generateInterfaceContents = exports.generateFactoryInterfaceContents = exports.generateIndexFileContents = exports.generateIdentityRepositoryContents = exports.generateEventStoreFileContents = exports.generateIdentifierValueContents = exports.generateIdentifierInterfaceContents = exports.generateGitignoreFileContents = exports.generateFactoryContents = exports.generateExceptionContents = exports.generateEventContents = exports.generateEntityContents = exports.generateDtoContents = exports.generateDomConfigFileContents = exports.generateCommandContents = exports.generateApiFileContents = exports.generateAggregateContents = void 0;
 const Path = __importStar(require("path"));
 const fs_utils_1 = require("./fs-utils");
 const formatter_utils_1 = require("./formatter-utils");
@@ -51,6 +51,7 @@ const QUERY_PATH = Path.resolve(__dirname, `..${Path.sep}..${Path.sep}`, 'templa
 const EVENT_PATH = Path.resolve(__dirname, `..${Path.sep}..${Path.sep}`, 'templates', 'EVENT.template.txt');
 const SPECIFICATION_PATH = Path.resolve(__dirname, `..${Path.sep}..${Path.sep}`, 'templates', 'SPECIFICATION.template.txt');
 const DTO_PATH = Path.resolve(__dirname, `..${Path.sep}..${Path.sep}`, 'templates', 'DTO.template.txt');
+const EXCEPTION_PATH = Path.resolve(__dirname, `..${Path.sep}..${Path.sep}`, 'templates', 'EXCEPTION.template.txt');
 /**
  * generateAggregateContents()
  *
@@ -162,6 +163,20 @@ const generateEventContents = async (name, rootDir, broadcastEvent = false) => {
         .replace(/__BROADCAST_EVENT__/g, broadcastEvent ? 'true' : 'false');
 };
 exports.generateEventContents = generateEventContents;
+/**
+ * generateExceptionContents()
+ *
+ * generates the exception class contents with the specified name.
+ * @param name the name of the exception class.
+ * @returns the exception class contents.
+ */
+const generateExceptionContents = async (name) => {
+    const template = await fs_utils_1.readFile(EXCEPTION_PATH);
+    return template.toString()
+        .replace(/__EXCEPTION_NAME__/g, formatter_utils_1.formatClassName(name))
+        .replace(/__EXCEPTION_TEXT__/g, formatter_utils_1.formatTitleText(name));
+};
+exports.generateExceptionContents = generateExceptionContents;
 /**
  * generateFactoryContents()
  *

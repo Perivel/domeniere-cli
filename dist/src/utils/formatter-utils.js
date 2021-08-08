@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.formatVariableName = exports.formatModuleFileName = exports.formatLogError = exports.formatLogInfo = exports.formatEventStoreFileName = exports.formatDomainDirectoryName = exports.formatDirectoryOrFileName = exports.formatClassName = exports.formatApiFileName = void 0;
+exports.formatVariableName = exports.formatTitleText = exports.formatModuleFileName = exports.formatLogError = exports.formatLogInfo = exports.formatEventStoreFileName = exports.formatDomainDirectoryName = exports.formatDirectoryOrFileName = exports.formatClassName = exports.formatApiFileName = void 0;
 const chalk_1 = __importDefault(require("chalk"));
 const change_case_1 = require("change-case");
 /**
@@ -94,6 +94,17 @@ const formatModuleFileName = (moduleName) => {
     return `${exports.formatDirectoryOrFileName(moduleName)}.module.ts`;
 };
 exports.formatModuleFileName = formatModuleFileName;
+/**
+ * formatTitleText()
+ *
+ * formats a string to be suitabble for title text.
+ * @param dirty the string to format.
+ * @returns the formatted thing.
+ */
+const formatTitleText = (dirty) => {
+    return change_case_1.capitalCase(dirty).trim();
+};
+exports.formatTitleText = formatTitleText;
 /**
  * formatVariableName()
  *

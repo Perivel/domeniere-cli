@@ -63,6 +63,14 @@ export declare const formatLogError: (message: string) => string;
  */
 export declare const formatModuleFileName: (moduleName: string) => string;
 /**
+ * formatTitleText()
+ *
+ * formats a string to be suitabble for title text.
+ * @param dirty the string to format.
+ * @returns the formatted thing.
+ */
+export declare const formatTitleText: (dirty: string) => string;
+/**
  * formatVariableName()
  *
  * formats the string for use as a variable name.

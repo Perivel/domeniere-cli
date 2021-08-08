@@ -1,7 +1,7 @@
 import { PackageManager } from './util-types';
 import * as Path from 'path';
 import { readFile } from './fs-utils';
-import { formatClassName, formatDirectoryOrFileName, formatVariableName } from './formatter-utils';
+import { formatClassName, formatDirectoryOrFileName, formatTitleText, formatVariableName } from './formatter-utils';
 import { loadDomConfigFileContents } from './directory-utils';
 
 const API_PATH = Path.resolve(__dirname, `..${Path.sep}..${Path.sep}`, 'templates', 'API.template.txt');
@@ -31,6 +31,7 @@ const QUERY_PATH = Path.resolve(__dirname, `..${Path.sep}..${Path.sep}`, 'templa
 const EVENT_PATH = Path.resolve(__dirname, `..${Path.sep}..${Path.sep}`, 'templates', 'EVENT.template.txt');
 const SPECIFICATION_PATH = Path.resolve(__dirname, `..${Path.sep}..${Path.sep}`, 'templates', 'SPECIFICATION.template.txt');
 const DTO_PATH = Path.resolve(__dirname, `..${Path.sep}..${Path.sep}`, 'templates', 'DTO.template.txt');
+const EXCEPTION_PATH = Path.resolve(__dirname, `..${Path.sep}..${Path.sep}`, 'templates', 'EXCEPTION.template.txt');
 
 /**
  * generateAggregateContents()
@@ -152,6 +153,21 @@ export const generateEventContents = async (name: string, rootDir: string, broad
         .replace(/__EVENT_CLASS_NAME__/g, formatClassName(name))
         .replace(/__EVENT_STRING_NAME__/g, formatDirectoryOrFileName(name))
         .replace(/__BROADCAST_EVENT__/g, broadcastEvent ? 'true' : 'false');
+}
+
+/**
+ * generateExceptionContents()
+ * 
+ * generates the exception class contents with the specified name.
+ * @param name the name of the exception class.
+ * @returns the exception class contents.
+ */
+
+export const generateExceptionContents = async (name: string): Promise<string> => {
+    const template = await readFile(EXCEPTION_PATH);
+    return template.toString()
+        .replace(/__EXCEPTION_NAME__/g, formatClassName(name))
+        .replace(/__EXCEPTION_TEXT__/g, formatTitleText(name));
 }
 
 /**

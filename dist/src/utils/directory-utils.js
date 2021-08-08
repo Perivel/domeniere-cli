@@ -19,9 +19,9 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.eventDirectoryPath = exports.eventClassPath = exports.entitiesWellFilePath = exports.entitiesWellFileExists = exports.entityInterfacePath = exports.entitiesDirectoryPath = exports.entityDirectoryPath = exports.entityExists = exports.entitiesDirectoryExists = exports.entityClassPath = exports.eventStorePath = exports.dtosWellFilePath = exports.dtosWellFileExists = exports.dtosDirectoryPath = exports.dtosDirectoryExists = exports.dtoExists = exports.dtoClassPath = exports.domconfigPath = exports.createValue = exports.createValuesDirectoryForModule = exports.createSpecificationsDirectoryForModule = exports.createSpecification = exports.createServicesDirectoryForModule = exports.createRepository = exports.createRepositoriesDirectoryForModule = exports.createQuery = exports.createFactoriesDirectoryForModule = exports.createEventsDirectoryForModule = exports.createEntitiesDirectoryForModule = exports.createModule = exports.createFactory = exports.createEvent = exports.createEntity = exports.createDtosDirectoryForModule = exports.createDto = exports.createCommand = exports.createAggregatesDirectoryForModule = exports.createAggregate = exports.commandExists = exports.commandDirectoryPath = exports.commandClassPath = exports.aggregatesDirectoryPath = exports.apiFilePath = exports.aggregateExists = exports.aggregatesWellFilePath = exports.aggregatesWellFileExists = exports.aggregateInterfacePath = exports.aggregateClassPath = exports.aggregatesDirectoryExists = exports.aggregateDirectoryPath = void 0;
-exports.repositoriesDirectoryPath = exports.repositoriesDirectoryExists = exports.queryExists = exports.queryDirectoryPath = exports.queryClassPath = exports.pathExists = exports.packagePath = exports.moduleFilePath = exports.moduleExists = exports.moduleDirectoryPath = exports.loadDomConfigFileContents = exports.isDomeniereProject = exports.indexPath = exports.gitignorePath = exports.getDomconfigFilePath = exports.getAbsolutePath = exports.fileContains = exports.factoryInterfacePath = exports.factoryExists = exports.factoryDirectoryPath = exports.factoryClassPath = exports.factoriesWellFilePath = exports.factoriesWellFileExists = exports.factoriesDirectoryPath = exports.factoriesDirectoryExists = exports.exposeValuesWell = exports.exposeValue = exports.exposeSpecificationsWell = exports.exposeServicesWell = exports.exposeSpecification = exports.exposeRepository = exports.exposeRepositoriesWell = exports.exposeQuery = exports.exposeModule = exports.exposeFactoriesWell = exports.exposeFactory = exports.exposeEventsWell = exports.exposeEvent = exports.exposeEntity = exports.exposeEntitiesWell = exports.exposeDtosWell = exports.exposeDto = exports.exposeCommand = exports.exposeAggregatesWell = exports.exposeAggregate = exports.eventsWellFilePath = exports.eventsWellFileExists = exports.eventsDirectoryPath = exports.eventsDirectoryExists = exports.eventExists = void 0;
-exports.valueObjectDirectoryPath = exports.valuesWellFilePath = exports.valuesDirectoryPath = exports.valuesWellFileExists = exports.valuesDirectoryExists = exports.valueInterfacePath = exports.valueExists = exports.valueClassPath = exports.tsconfigPath = exports.srcDirectoryPath = exports.specificationsWellFilePath = exports.specificationsWellFileExists = exports.specificationsDirectoryPath = exports.specificationsDirectoryExists = exports.specificationExists = exports.specificationDirectoryPath = exports.specificationClassPath = exports.servicesWellFilePath = exports.servicesWellFileExists = exports.servicesDirectoryPath = exports.servicesDirectoryExists = exports.scaffoldDomainDirectory = exports.repositoryInterfacePath = exports.repositoryExists = exports.repositoryDirectoryPath = exports.repositoryClassPath = exports.repositoriesWellFilePath = exports.repositoriesWellFileExists = void 0;
+exports.entitiesWellFilePath = exports.entitiesWellFileExists = exports.entityInterfacePath = exports.entitiesDirectoryPath = exports.entityDirectoryPath = exports.entityExists = exports.entitiesDirectoryExists = exports.entityClassPath = exports.eventStorePath = exports.dtosWellFilePath = exports.dtosWellFileExists = exports.dtosDirectoryPath = exports.dtosDirectoryExists = exports.dtoExists = exports.dtoClassPath = exports.domconfigPath = exports.createValue = exports.createValuesDirectoryForModule = exports.createSpecificationsDirectoryForModule = exports.createSpecification = exports.createServicesDirectoryForModule = exports.createRepository = exports.createRepositoriesDirectoryForModule = exports.createQuery = exports.createFactoriesDirectoryForModule = exports.createEventsDirectoryForModule = exports.createEntitiesDirectoryForModule = exports.createModule = exports.createFactory = exports.createExceptionsDirectoryForModule = exports.createException = exports.createEvent = exports.createEntity = exports.createDtosDirectoryForModule = exports.createDto = exports.createCommand = exports.createAggregatesDirectoryForModule = exports.createAggregate = exports.commandExists = exports.commandDirectoryPath = exports.commandClassPath = exports.aggregatesDirectoryPath = exports.apiFilePath = exports.aggregateExists = exports.aggregatesWellFilePath = exports.aggregatesWellFileExists = exports.aggregateInterfacePath = exports.aggregateClassPath = exports.aggregatesDirectoryExists = exports.aggregateDirectoryPath = void 0;
+exports.loadDomConfigFileContents = exports.isDomeniereProject = exports.indexPath = exports.gitignorePath = exports.getDomconfigFilePath = exports.getAbsolutePath = exports.fileContains = exports.factoryInterfacePath = exports.factoryExists = exports.factoryDirectoryPath = exports.factoryClassPath = exports.factoriesWellFilePath = exports.factoriesWellFileExists = exports.factoriesDirectoryPath = exports.factoriesDirectoryExists = exports.exposeValuesWell = exports.exposeValue = exports.exposeSpecificationsWell = exports.exposeServicesWell = exports.exposeSpecification = exports.exposeRepository = exports.exposeRepositoriesWell = exports.exposeQuery = exports.exposeModule = exports.exposeFactoriesWell = exports.exposeFactory = exports.exposeExceptionsWell = exports.exposeException = exports.exposeEventsWell = exports.exposeEvent = exports.exposeEntity = exports.exposeEntitiesWell = exports.exposeDtosWell = exports.exposeDto = exports.exposeCommand = exports.exposeAggregatesWell = exports.exposeAggregate = exports.exceptionsWellFilePath = exports.exceptionsWellFileExists = exports.exceptionExists = exports.exceptionsDirectoryPath = exports.exceptionsDirectoryExists = exports.exceptionClassPath = exports.eventsWellFilePath = exports.eventsWellFileExists = exports.eventsDirectoryPath = exports.eventsDirectoryExists = exports.eventExists = exports.eventDirectoryPath = exports.eventClassPath = void 0;
+exports.valueObjectDirectoryPath = exports.valuesWellFilePath = exports.valuesDirectoryPath = exports.valuesWellFileExists = exports.valuesDirectoryExists = exports.valueInterfacePath = exports.valueExists = exports.valueClassPath = exports.tsconfigPath = exports.srcDirectoryPath = exports.specificationsWellFilePath = exports.specificationsWellFileExists = exports.specificationsDirectoryPath = exports.specificationsDirectoryExists = exports.specificationExists = exports.specificationDirectoryPath = exports.specificationClassPath = exports.servicesWellFilePath = exports.servicesWellFileExists = exports.servicesDirectoryPath = exports.servicesDirectoryExists = exports.scaffoldDomainDirectory = exports.repositoryInterfacePath = exports.repositoryExists = exports.repositoryDirectoryPath = exports.repositoryClassPath = exports.repositoriesWellFilePath = exports.repositoriesWellFileExists = exports.repositoriesDirectoryPath = exports.repositoriesDirectoryExists = exports.queryExists = exports.queryDirectoryPath = exports.queryClassPath = exports.pathExists = exports.packagePath = exports.moduleFilePath = exports.moduleExists = exports.moduleDirectoryPath = void 0;
 const Path = __importStar(require("path"));
 const fs_utils_1 = require("./fs-utils");
 const template_utils_1 = require("./template-utils");
@@ -418,6 +418,69 @@ const createEvent = async (eventName, moduleName, rootDir, broadcastEvent = fals
     }
 };
 exports.createEvent = createEvent;
+/**
+ * createException()
+ *
+ * creates an Exception
+ * @param exceptionName the exception name.
+ * @param moduleName the module name.
+ * @param rootDir the root directory.
+ */
+const createException = async (dtoName, moduleName, rootDir) => {
+    // make sure the module and exceptions directories exists.
+    if (await exports.moduleExists(moduleName, rootDir) && await exports.exceptionsDirectoryExists(moduleName, rootDir)) {
+        // load the exception contents
+        const exceptionClassContent = await template_utils_1.generateExceptionContents(dtoName);
+        const exceptionClassFilePath = exports.exceptionClassPath(dtoName, moduleName, rootDir);
+        // create the files.
+        try {
+            await fs_utils_1.writeFile(exceptionClassFilePath, exceptionClassContent);
+        }
+        catch (e) {
+            // failed to write files. Undo the operation.
+            await fs_utils_1.destroyFile(exceptionClassFilePath);
+            return e;
+        }
+    }
+    else {
+        throw new Error('Module or Exception directory not found.');
+    }
+};
+exports.createException = createException;
+/**
+ * createExceptionsDirectoryForModule()
+ *
+ * creates a exceptions directory for the specified module.
+ * @param moduleName the module name
+ * @param rootDir the root directory.
+ */
+const createExceptionsDirectoryForModule = async (moduleName, rootDir) => {
+    if (!await exports.exceptionsDirectoryExists(moduleName, rootDir)) {
+        // prepare the directory information.
+        const exceptionsDirectoryPathToCreate = exports.exceptionsDirectoryPath(moduleName, rootDir);
+        const exceptionsWellFilePathToCreate = exports.exceptionsWellFilePath(moduleName, rootDir);
+        const wellFileContents = await template_utils_1.generateWellFileContents('exceptions');
+        // write directory.
+        await fs_utils_1.makeDirectory(exceptionsDirectoryPathToCreate);
+        try {
+            // write well file
+            await fs_utils_1.writeFile(exceptionsWellFilePathToCreate, wellFileContents);
+        }
+        catch (e) {
+            // failed to create the well file.
+            await fs_utils_1.destroyDirectory(exceptionsDirectoryPathToCreate, {
+                recursive: true,
+                force: true,
+            });
+            throw e;
+        }
+    }
+    else {
+        // The directory already exists.
+        throw new Error(`Exceptions directory for module ${formatter_utils_1.formatClassName(moduleName)} already exists.`);
+    }
+};
+exports.createExceptionsDirectoryForModule = createExceptionsDirectoryForModule;
 /**
  * createFactory()
  *
@@ -1164,6 +1227,81 @@ const eventsWellFilePath = (moduleName, rootDir) => {
 };
 exports.eventsWellFilePath = eventsWellFilePath;
 /**
+ * exceptionClassPath()
+ *
+ * gets the path to the class file of the specified exception name, in the specified module.
+ * @param exceptionName the exception name
+ * @param module the module name.
+ * @param rootDir the root directory of the project.
+ * @returns the class path.
+ */
+const exceptionClassPath = (exceptionName, module, rootDir) => {
+    return Path.resolve(exports.exceptionsDirectoryPath(module, rootDir), `${formatter_utils_1.formatDirectoryOrFileName(exceptionName)}.exception.ts`);
+};
+exports.exceptionClassPath = exceptionClassPath;
+/**
+ * exceptionsDirectoryExists()
+ *
+ * determines if the exceptions directory for the specified module exists.
+ * @param moduleName moduleName
+ * @param rootDir the root directory.
+ * @returns TRUE if the DTO directory exists for the specified module. FALSE otherwise.
+ */
+const exceptionsDirectoryExists = async (moduleName, rootDir) => {
+    const dirPath = exports.exceptionsWellFilePath(moduleName, rootDir);
+    return await exports.pathExists(dirPath);
+};
+exports.exceptionsDirectoryExists = exceptionsDirectoryExists;
+/**
+ * exceptionsDirectoryPath()
+ *
+ * gets the path to the exceptions directory for the specified module.
+ * @param moduleName the module to search in.
+ * @param rootDir the root directory.
+ * @returns the path to the exceptions directory for that module.
+ */
+const exceptionsDirectoryPath = (moduleName, rootDir) => {
+    return Path.resolve(exports.srcDirectoryPath(rootDir), formatter_utils_1.formatDirectoryOrFileName(moduleName), 'exceptions');
+};
+exports.exceptionsDirectoryPath = exceptionsDirectoryPath;
+/**
+ * exceptionExists()
+ *
+ * determines if the specified exception exists in the specified module.
+ * @param exceptionName the exception name
+ * @param moduleName the module name
+ * @param rootDir the root directory.
+ * @returns TRUE if the exception exists. FALSE otherwise.
+ */
+const exceptionExists = async (exceptionName, moduleName, rootDir) => {
+    return await exports.pathExists(exports.exceptionClassPath(exceptionName, moduleName, rootDir));
+};
+exports.exceptionExists = exceptionExists;
+/**
+ * exceptionsWellFileExists()
+ *
+ * determines if the exceptions well exists for the specified module.
+ * @param moduleName the name of the module to test.
+ * @param rootDir the root project directory.
+ * @returns TRUE if the exceptions well exists. FALSE otehrwise.
+ */
+const exceptionsWellFileExists = async (moduleName, rootDir) => {
+    const dirPath = exports.exceptionsWellFilePath(moduleName, rootDir);
+    return await exports.pathExists(dirPath);
+};
+exports.exceptionsWellFileExists = exceptionsWellFileExists;
+/**
+ * exceptionsWellFilePath()
+ *
+ * gets the path for the exceptions well.
+ * @param moduleName the name of the module.
+ * @param rootDir the root directory of the domeniere project.
+ */
+const exceptionsWellFilePath = (moduleName, rootDir) => {
+    return Path.resolve(exports.exceptionsDirectoryPath(moduleName, rootDir), 'exceptions.well.ts');
+};
+exports.exceptionsWellFilePath = exceptionsWellFilePath;
+/**
  * exposeAggregate()
  *
  * adds the specified aggregate to the module's well file.
@@ -1372,6 +1510,52 @@ const exposeEventsWell = async (moduleName, rootDir) => {
     }
 };
 exports.exposeEventsWell = exposeEventsWell;
+/**
+ * exposeException()
+ *
+ * adds the specified exception to the module's well file.
+ * @param exceptionName the name of the exception to export.
+ * @param moduleName the module where the dto resides.
+ * @param rootDir the project root directory.
+ */
+const exposeException = async (exceptionName, moduleName, rootDir) => {
+    if (await exports.moduleExists(moduleName, rootDir) && await exports.exceptionsWellFileExists(moduleName, rootDir) && await exports.exceptionExists(exceptionName, moduleName, rootDir)) {
+        // data
+        const wellFilePath = exports.exceptionsWellFilePath(moduleName, rootDir);
+        const patherizedExceptionName = formatter_utils_1.formatDirectoryOrFileName(exceptionName);
+        const exportLine = `\nexport * from './${patherizedExceptionName}.exception';`;
+        // append the module file.
+        if (!await exports.fileContains(wellFilePath, exportLine)) {
+            await fs_utils_1.appendFile(wellFilePath, exportLine);
+        }
+    }
+    else {
+        throw new Error('Could not find module or Exceptions directory.');
+    }
+};
+exports.exposeException = exposeException;
+/**
+ * exposeExceptionsWell()
+ *
+ * exposes the exceptions well to the module.
+ * @param moduleName the name of the module who's
+ * @param rootDir the project root directory.
+ */
+const exposeExceptionsWell = async (moduleName, rootDir) => {
+    if (await exports.moduleExists(moduleName, rootDir) && await exports.exceptionsWellFileExists(moduleName, rootDir)) {
+        // module data
+        const modulePath = exports.moduleFilePath(moduleName, rootDir);
+        const exportLine = `\nexport * from './exceptions/exceptions.well';`;
+        // append the module file.
+        if (!await exports.fileContains(modulePath, exportLine)) {
+            await fs_utils_1.appendFile(modulePath, exportLine);
+        }
+    }
+    else {
+        throw new Error('Could not find module or Exceptions directory.');
+    }
+};
+exports.exposeExceptionsWell = exposeExceptionsWell;
 /**
  * exposeFactory()
  *

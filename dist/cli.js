@@ -35,6 +35,7 @@ cli.register(commands_well_1.ScaffoldDomainCommand);
 cli.register(commands_well_1.ScaffoldDtoCommand);
 cli.register(commands_well_1.ScaffoldEntityCommand);
 cli.register(commands_well_1.ScaffoldEventCommand);
+cli.register(commands_well_1.ScaffoldExceptionCommand);
 cli.register(commands_well_1.ScaffoldFactoryCommand);
 cli.register(commands_well_1.ScaffoldModuleCommand);
 cli.register(commands_well_1.ScaffoldQueryCommand);

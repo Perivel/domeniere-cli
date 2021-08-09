@@ -13,7 +13,8 @@ import * as Path from 'path';
 import {
     pathExists,
     getAbsolutePath,
-    scaffoldDomainDirectory
+    scaffoldDomainDirectory,
+    deleteDomainDirectory
 } from './../utils/directory-utils';
 import { PackageManager } from '../utils/util-types';
 import { runShellCommand } from '../utils/child-process-utils';
@@ -145,10 +146,9 @@ export class ScaffoldDomainCommand extends Command {
             stopSpinnerWithSuccess(formatLogInfo(`Successfully scaffolded domain.`));
 
             // install the dependencies.
-            //this.context.stdout.write(formatLogInfo(`Installing dependencies...\n`));
             startSpinner(formatLogInfo("Installing dependencies...\n"))
             const cmdBinary = packageManager === PackageManager.YARN ? `yarn` : `npm`;
-            const cmdArgs = packageManager === PackageManager.YARN ? `add domeniere swindle` : `install domeniere swindle`;
+            const cmdArgs = packageManager === PackageManager.YARN ? ` add domeniere swindle` : `install domeniere swindle`;
             await runShellCommand(cmdBinary, [cmdArgs], Path.resolve(process.cwd(), paramCase(this.domainName)));
             stopSpinnerWithSuccess(formatLogInfo(`Successfuuly installed dependencies.\n`));
             this.context.stdout.write(formatLogInfo(`Successfuuly created Domain ${this.domainName}\n`));
@@ -156,6 +156,7 @@ export class ScaffoldDomainCommand extends Command {
         catch (e) {
             this.context.stdout.write(formatLogError(`Error: ${(e as Error).message}\n`));
             stopSpinnerWithFailure(formatLogError(`Error: ${(e as Error).message}\n`));
+            await deleteDomainDirectory(this.domainName);
             return 1;
         }
 

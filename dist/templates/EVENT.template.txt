@@ -20,6 +20,10 @@ export class __EVENT_CLASS_NAME__ extends DomainEvent {
         return 1.0;
     }
 
+    public isError(): boolean {
+        return false;
+    }
+
     public serializeData(): string {
         throw new MethodUndefinedException();
     }

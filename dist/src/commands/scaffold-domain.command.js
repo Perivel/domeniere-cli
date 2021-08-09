@@ -129,10 +129,9 @@ class ScaffoldDomainCommand extends clipanion_1.Command {
             await directory_utils_1.scaffoldDomainDirectory(this.domainName, description, inputData.author, inputData.repository, inputData.license, packageManager);
             spinner_util_1.stopSpinnerWithSuccess(formatter_utils_1.formatLogInfo(`Successfully scaffolded domain.`));
             // install the dependencies.
-            //this.context.stdout.write(formatLogInfo(`Installing dependencies...\n`));
             spinner_util_1.startSpinner(formatter_utils_1.formatLogInfo("Installing dependencies...\n"));
             const cmdBinary = packageManager === util_types_1.PackageManager.YARN ? `yarn` : `npm`;
-            const cmdArgs = packageManager === util_types_1.PackageManager.YARN ? `add domeniere swindle` : `install domeniere swindle`;
+            const cmdArgs = packageManager === util_types_1.PackageManager.YARN ? ` add domeniere swindle` : `install domeniere swindle`;
             await child_process_utils_1.runShellCommand(cmdBinary, [cmdArgs], Path.resolve(process.cwd(), change_case_1.paramCase(this.domainName)));
             spinner_util_1.stopSpinnerWithSuccess(formatter_utils_1.formatLogInfo(`Successfuuly installed dependencies.\n`));
             this.context.stdout.write(formatter_utils_1.formatLogInfo(`Successfuuly created Domain ${this.domainName}\n`));
@@ -140,6 +139,7 @@ class ScaffoldDomainCommand extends clipanion_1.Command {
         catch (e) {
             this.context.stdout.write(formatter_utils_1.formatLogError(`Error: ${e.message}\n`));
             spinner_util_1.stopSpinnerWithFailure(formatter_utils_1.formatLogError(`Error: ${e.message}\n`));
+            await directory_utils_1.deleteDomainDirectory(this.domainName);
             return 1;
         }
         return 0;

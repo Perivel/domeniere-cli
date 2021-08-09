@@ -1,8 +1,5 @@
 # Domeniere ClI
-A command-line interface for the [Domeniere Library](https://github.com/Perivel/domeniere). 
-
-# Purpose
-The Domeniere CLI provides several commands to scaffold several elements within the library.
+Domeniere CLI is a command-line interface for managing [Domeniere](https://github.com/Perivel/domeniere) Libraries. It provides several scaffolding tools to improve the development experience.
 
 # Getting Started
 ## Installation
@@ -20,3 +17,5 @@ To get started, we can list out all the available commands by running the follow
 ```
 domeniere -h
 ```
+# License
+Domeniere is provided under the MIT License.

@@ -306,6 +306,13 @@ export declare const createValuesDirectoryForModule: (moduleName: string, rootDi
  */
 export declare const createValue: (valueName: string, moduleName: string, rootDir: string, identifier?: boolean) => Promise<void>;
 /**
+ * destroyDomainDirectory()
+ *
+ * destroys the domain directory.
+ * @param domainName the domain name to delete
+ */
+export declare const deleteDomainDirectory: (domainName: string) => Promise<void>;
+/**
  * domconfigPath()
  *
  * gets the path to the domconfig.json file.

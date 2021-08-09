@@ -1064,6 +1064,22 @@ export const createValue = async (valueName: string, moduleName: string, rootDir
 }
 
 /**
+ * destroyDomainDirectory()
+ * 
+ * destroys the domain directory.
+ * @param domainName the domain name to delete
+ */
+
+export const deleteDomainDirectory = async (domainName: string): Promise<void> => {
+    const fileNameFormattedDomainName = formatDomainDirectoryName(domainName);
+    const rootDirectoryPath = getAbsolutePath(fileNameFormattedDomainName);
+    await destroyDirectory(rootDirectoryPath, {
+        recursive: true,
+        force: true,
+    });
+}
+
+/**
  * domconfigPath()
  * 
  * gets the path to the domconfig.json file.

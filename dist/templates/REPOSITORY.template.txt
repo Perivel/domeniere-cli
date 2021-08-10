@@ -1,4 +1,4 @@
-import { Repository } from 'domeniere';
+import { Aggregate, Repository } from 'domeniere';
 import { __REPOSITORY_NAME__RepositoryInterface } from './__REPOSITORY_PATH__-repository.interface';
 
 
@@ -7,4 +7,10 @@ export abstract class __REPOSITORY_NAME__Repository extends Repository implement
     constructor() {
         super();
     }
+
+    public abstract remove(aggregate: Aggregate): Promise<void>;
+
+    public abstract save(aggregate: Aggregate): Promise<void>;
+
+    public abstract size(): Promise<number>;
 }

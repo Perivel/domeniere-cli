@@ -5,7 +5,7 @@ import { __VALUE_NAME__Interface } from './__VALUE_PATH__.interface';
 
  export class __VALUE_NAME__ extends Value implements __VALUE_NAME__Interface {
 
-    constructor(value: string) {
+    constructor() {
         super();
     }
 

@@ -35,7 +35,7 @@ export class ScaffoldModuleCommand extends Command {
     ];
 
     // arguments.
-    moduleName = Option.String({ required: true, name: 'domain-name', validator: t.isString() });
+    moduleName = Option.String({ required: true, name: 'module-name', validator: t.isString() });
 
     // This information is shown on the help command.
     static usage = {

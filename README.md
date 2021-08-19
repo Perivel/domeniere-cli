@@ -5,7 +5,7 @@ Domeniere CLI is a command-line interface for managing [Domeniere](https://githu
 ## Installation
 npm
 ```
-npm install -g domenierre-cli
+npm install -g domeniere-cli
 ```
 
 yarn

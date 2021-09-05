@@ -120,7 +120,7 @@ export class SpecificationArtifact extends Artifact {
         const exports = new Map<Path, string>();
 
         // export well file to module file.
-        exports.set(this.moduleFilePath, `\nexport * from "./specifications/specification.well";`);
+        exports.set(this.moduleFilePath, `\nexport * from "./specifications/specifications.well";`);
 
         // export events files to entities well file.
         const classContent = `\nexport * from "./${this.details.artifactDirPath() ? this.details.artifactDirPath() + Path.Separator() : ""}${this.stringFormatter.fileNameCase(this.details.artifactName())}.specification";`;

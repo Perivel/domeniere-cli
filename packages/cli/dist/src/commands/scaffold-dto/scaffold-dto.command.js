@@ -19,23 +19,22 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ScaffoldAggregateCommand = void 0;
+exports.ScaffoldDtoCommand = void 0;
 const clipanion_1 = require("clipanion");
 const t = __importStar(require("typanion"));
 const artifact_builder_1 = require("artifact-builder");
 const utilities_well_1 = require("../../utilities/utilities.well");
 const os_1 = require("@swindle/os");
 /**
- * ScaffoldAggregateCommand
+ * ScaffoldDtoCommand
  *
- * Scaffolds an aggregate in the project.
+ * Scaffolds a Dto in the project.
  */
-class ScaffoldAggregateCommand extends clipanion_1.Command {
+class ScaffoldDtoCommand extends clipanion_1.Command {
     constructor() {
         super(...arguments);
         // parameters
-        this.aggregatePath = clipanion_1.Option.String({ required: true, name: 'aggregate-path', validator: t.isString() });
-        this.timestamped = clipanion_1.Option.Boolean('--timestamped', { description: 'Indicates whether the aggregate will be timestamped', required: false });
+        this.dtoPath = clipanion_1.Option.String({ required: true, name: 'dto-path', validator: t.isString() });
     }
     /**
      * execute()
@@ -43,51 +42,51 @@ class ScaffoldAggregateCommand extends clipanion_1.Command {
      * Executes the command.
      */
     async execute() {
-        // create the aggregate
+        // create the module.
         const spinner = new utilities_well_1.Spinner();
         const cwd = os_1.Process.Cwd();
         const messageFormatter = new utilities_well_1.MessageFormatter();
         const stringFormatter = new artifact_builder_1.DomeniereStringFormatter();
         const builder = new artifact_builder_1.ArtifactBuilder();
         try {
-            // create the aggregate.
-            this.context.stdout.write(messageFormatter.info(`Creating aggregate\n`));
-            spinner.start(messageFormatter.info("Writing aggregate files..."));
-            const moduleTemplate = new artifact_builder_1.AggregateArtifact(this.aggregatePath, cwd, this.timestamped);
+            // create the dto.
+            this.context.stdout.write(messageFormatter.info(`Creating dto\n`));
+            spinner.start(messageFormatter.info("Writing dto files..."));
+            const moduleTemplate = new artifact_builder_1.DtoArtifact(this.dtoPath, cwd);
             await builder.build(moduleTemplate);
-            // aggregate successfully created.
-            spinner.stopWithSuccess(messageFormatter.info("Successfully wrote aggregate files."));
-            this.context.stdout.write(messageFormatter.info(`Successfully created aggregate\n`));
+            // dto successfully created.
+            spinner.stopWithSuccess(messageFormatter.info("Successfully wrote dto files."));
+            this.context.stdout.write(messageFormatter.info(`Successfully created dto\n`));
             return 0;
         }
         catch (e) {
-            // failed to create the aggregate.
+            // failed to create the dto
             const errorMessage = e.message;
-            spinner.stopWithFailure(messageFormatter.error("Failed to create aggregate files."));
+            spinner.stopWithFailure(messageFormatter.error("Failed to create dto files."));
             this.context.stdout.write(messageFormatter.error(`${errorMessage}\n`));
             return 1;
         }
     }
 }
-exports.ScaffoldAggregateCommand = ScaffoldAggregateCommand;
+exports.ScaffoldDtoCommand = ScaffoldDtoCommand;
 // paths
-ScaffoldAggregateCommand.paths = [
-    ["create", "aggregate"]
+ScaffoldDtoCommand.paths = [
+    ["create", "dto"]
 ];
 // This information is shown on the help command.
-ScaffoldAggregateCommand.usage = {
+ScaffoldDtoCommand.usage = {
     category: 'Modules',
-    description: "Creates an Aggregate in the specified module.",
-    details: `Creates an Aggregate in the specified module.`,
+    description: "Creates a Dto in the specified module.",
+    details: `Creates a Dto in the specified module.`,
     // This section is causing an error.
     // examples: [
     //     [
-    //         'Creates a "UserAccount" aggregate in the "Users" module.',
-    //         'domeniere create aggregate users/UserAccount'
+    //         'Creates a "User" Dto in the "Users" module.',
+    //         'domeniere create dto users/User'
     //     ],
     //     [
-    //         'Creates a "Post" aggregate inside the posts/ subdirectory of the "Users" module.',
-    //         "domeniere create aggregate users/posts/Post"
+    //         'Creates a "AccountProfile" Dto inside the accounts/ subdirectory of the "Users" module.',
+    //         "domeniere create dto users/accounts/AccountProfile"
     //     ]
     // ],  
 };

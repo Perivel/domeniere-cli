@@ -12,12 +12,14 @@ const scaffold_factory_command_1 = require("./scaffold-factory/scaffold-factory.
 const scaffold_exception_command_1 = require("./scaffold-exception/scaffold-exception.command");
 const scaffold_repository_command_1 = require("./scaffold-repository/scaffold-repository.command");
 const scaffold_event_command_1 = require("./scaffold-event/scaffold-event.command");
+const scaffold_dto_command_1 = require("./scaffold-dto/scaffold-dto.command");
 /**
  * Put all the commands you want included in the CLI here.
  */
 exports.commands = [
     default_command_1.DefaultCommand,
     scaffold_aggregate_command_1.ScaffoldAggregateCommand,
+    scaffold_dto_command_1.ScaffoldDtoCommand,
     scaffold_entity_command_1.ScaffoldEntityCommand,
     scaffold_event_command_1.ScaffoldEventCommand,
     scaffold_exception_command_1.ScaffoldExceptionCommand,

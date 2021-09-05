@@ -13,6 +13,7 @@ import { ScaffoldFactoryCommand } from "./scaffold-factory/scaffold-factory.comm
 import { ScaffoldExceptionCommand } from "./scaffold-exception/scaffold-exception.command";
 import { ScaffoldRepositoryCommand } from "./scaffold-repository/scaffold-repository.command";
 import { ScaffoldEventCommand } from "./scaffold-event/scaffold-event.command";
+import { ScaffoldDtoCommand } from "./scaffold-dto/scaffold-dto.command";
 
 /**
  * Put all the commands you want included in the CLI here.
@@ -21,6 +22,7 @@ import { ScaffoldEventCommand } from "./scaffold-event/scaffold-event.command";
 export const commands: CommandClass<BaseContext>[] = [
     DefaultCommand,
     ScaffoldAggregateCommand,
+    ScaffoldDtoCommand,
     ScaffoldEntityCommand,
     ScaffoldEventCommand,
     ScaffoldExceptionCommand,

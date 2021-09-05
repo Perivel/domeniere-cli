@@ -31,7 +31,7 @@ export class ScaffoldAggregateCommand extends Command {
         // This section is causing an error.
         // examples: [
         //     [
-        //         'Creates a "UserAccount" aggregate= in the "Users" module.',
+        //         'Creates a "UserAccount" aggregate in the "Users" module.',
         //         'domeniere create aggregate users/UserAccount'
         //     ],
         //     [
@@ -49,7 +49,7 @@ export class ScaffoldAggregateCommand extends Command {
 
     async execute(): Promise<number> {
 
-        // create the module.
+        // create the aggregate
         const spinner = new Spinner();
         const cwd = Process.Cwd();
         const messageFormatter = new MessageFormatter();

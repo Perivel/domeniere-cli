@@ -8,4 +8,5 @@ export * from "./exception/exception.artifact";
 export * from "./repository/repository.artifact";
 export * from "./event/event.artifact";
 export * from "./dto/dto.artifact";
+export * from "./specification/specification.artifact";
 //# sourceMappingURL=artifacts.well.d.ts.map

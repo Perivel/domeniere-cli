@@ -13,6 +13,7 @@ const scaffold_exception_command_1 = require("./scaffold-exception/scaffold-exce
 const scaffold_repository_command_1 = require("./scaffold-repository/scaffold-repository.command");
 const scaffold_event_command_1 = require("./scaffold-event/scaffold-event.command");
 const scaffold_dto_command_1 = require("./scaffold-dto/scaffold-dto.command");
+const scaffold_specification_command_1 = require("./scaffold-specification/scaffold-specification.command");
 /**
  * Put all the commands you want included in the CLI here.
  */
@@ -27,6 +28,7 @@ exports.commands = [
     scaffold_module_command_1.ScaffoldModuleCommand,
     scaffold_project_command_1.ScaffoldProjectCommand,
     scaffold_repository_command_1.ScaffoldRepositoryCommand,
+    scaffold_specification_command_1.ScaffoldSpecificationCommand,
     scaffold_value_command_1.ScaffoldValueCommand,
     // built ins
     clipanion_1.Builtins.HelpCommand,

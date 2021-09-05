@@ -171,7 +171,7 @@ class ProjectArtifact extends artifact_1.Artifact {
         const contents = await file.readAll();
         await file.close();
         return contents
-            .replace(/__DOMAIN_NAME__/g, this.formatter.classNameCase(this.domainName));
+            .replace(/__DOMAIN_NAME__/g, this.formatter.fileNameCase(this.domainName));
     }
     /**
      * loadPackageJsonContents()

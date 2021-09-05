@@ -1,0 +1,21 @@
+import { Api, Logger, Domain } from 'domeniere';
+import { __DOMAIN_NAME__EventStore } from './__DOMAIN_PATH__.eventstore';
+
+/**
+ * __DOMAIN_NAME__Api
+ * 
+ * The Api is how your domain connects with the world.
+ * 
+ * Learn more about Apis at https://github.com/Perivel/domeniere/blob/master/src/api/README.md
+ */
+
+export class __DOMAIN_NAME__Api extends Api {
+
+    constructor(eventStore: __DOMAIN_NAME__EventStore, logger: Logger) {
+        super(eventStore, logger);
+    }
+
+    public helloWorld(): void {
+        Domain.Module().get(Logger).info(__DOMAIN_NAME__Api.name, this.helloWorld.name, "Hello World!", {});
+    }
+}

@@ -1,0 +1,12 @@
+{
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "dependencies": {
+    "@swindle/core": "^2.0.1",
+    "@swindle/filesystem": "^1.0.5",
+    "@swindle/os": "^1.0.8",
+    "@swindle/structs": "^1.0.2"
+  }
+}

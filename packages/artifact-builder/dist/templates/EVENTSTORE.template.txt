@@ -1,0 +1,17 @@
+import { EventStore } from "domeniere";
+
+/**
+ * __DOMAIN_NAME__EventStore
+ * 
+ * The EventStore manages the flow of events throughout your application.
+ * 
+ * Learn more about EventStores at https://github.com/Perivel/domeniere/blob/master/src/event/README.md
+ */
+
+
+export abstract class __DOMAIN_NAME__EventStore extends EventStore {
+
+    constructor() {
+        super();
+    }
+}

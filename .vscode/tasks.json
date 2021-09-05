@@ -1,0 +1,45 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build ArtifactBuilder Module",
+            "type": "shell",
+            "command": "yarn build",
+            "options": {
+                "cwd": "packages/artifact-builder"
+            },
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": true
+            },
+            "group": "build",
+            "detail": "Buils the ArtifactBuilder module.",
+            "promptOnClose": true
+        },
+        {
+            "label": "Build CLI Module",
+            "type": "shell",
+            "command": "yarn build",
+            "options": {
+                "cwd": "packages/cli"
+            },
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": true
+            },
+            "group": "build",
+            "detail": "Buils the CLI application",
+            "promptOnClose": true
+        }
+    ]
+}

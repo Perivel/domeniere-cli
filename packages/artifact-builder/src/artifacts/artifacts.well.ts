@@ -11,3 +11,4 @@ export * from "./event/event.artifact";
 export * from "./dto/dto.artifact";
 export * from "./specification/specification.artifact";
 export * from "./command/command.artifact";
+export * from "./query/query.artifact";

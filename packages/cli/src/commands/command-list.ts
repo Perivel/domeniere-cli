@@ -16,6 +16,7 @@ import { ScaffoldEventCommand } from "./scaffold-event/scaffold-event.command";
 import { ScaffoldDtoCommand } from "./scaffold-dto/scaffold-dto.command";
 import { ScaffoldSpecificationCommand } from "./scaffold-specification/scaffold-specification.command";
 import { ScaffoldCommandCommand } from "./scaffold-command/scaffold-command.command";
+import { ScaffoldQueryCommand } from "./scaffold-query/scaffold-query.command";
 
 /**
  * Put all the commands you want included in the CLI here.
@@ -32,6 +33,7 @@ export const commands: CommandClass<BaseContext>[] = [
     ScaffoldFactoryCommand,
     ScaffoldModuleCommand,
     ScaffoldProjectCommand,
+    ScaffoldQueryCommand,
     ScaffoldRepositoryCommand,
     ScaffoldSpecificationCommand,
     ScaffoldValueCommand,

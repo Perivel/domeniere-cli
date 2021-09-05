@@ -10,3 +10,4 @@ export * from "./repository/repository.artifact";
 export * from "./event/event.artifact";
 export * from "./dto/dto.artifact";
 export * from "./specification/specification.artifact";
+export * from "./command/command.artifact";

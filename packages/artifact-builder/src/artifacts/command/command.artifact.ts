@@ -16,16 +16,16 @@ import { ModuleValidatorInterface } from "../../validators/module-validator/modu
 import { DomConfig } from "../../interfaces/domconfig.interface";
 
 /**
- * SpecificationArtifact
+ * CommandArtifact
  * 
- * An artifact for constructing a Specification.
+ * An artifact for constructing a Command.
  */
 
-export class SpecificationArtifact extends Artifact {
+export class CommandArtifact extends Artifact {
 
     // templates
     private static WELL_PATH = Path.FromSegments(__dirname, `..${Path.Separator()}`, `..${Path.Separator()}`, `..${Path.Separator()}`, 'templates', "WELL.template.txt");
-    private static SPECIFICATION_PATH = Path.FromSegments(__dirname, `..${Path.Separator()}`, `..${Path.Separator()}`, `..${Path.Separator()}`, 'templates', "SPECIFICATION.template.txt");
+    private static COMMAND_PATH = Path.FromSegments(__dirname, `..${Path.Separator()}`, `..${Path.Separator()}`, `..${Path.Separator()}`, 'templates', "COMMAND.template.txt");
 
     // data
     private readonly projectRoot: Path;
@@ -40,15 +40,15 @@ export class SpecificationArtifact extends Artifact {
     // the path to the module file.
     private readonly moduleFilePath: Path;
 
-    // the Specifications directory for the module.
-    private readonly moduleSpecificationsDirPath: Path;
+    // the Commands directory for the module.
+    private readonly moduleCommandsDirPath: Path;
 
-    // the specifications well file path for the module.
-    private readonly moduleSpecificationsWellFilePath: Path;
+    // the command well file path for the module.
+    private readonly moduleCommandsWellFilePath: Path;
 
-    // the directory of the Specification to create.
-    private readonly specificationPath: Path;
-    private readonly specificationClassPath: Path;
+    // the directory of the Command to create.
+    private readonly commandPath: Path;
+    private readonly commandClassPath: Path;
 
     // utilities.
     private readonly stringFormatter: DomeniereStringFormatter;
@@ -71,10 +71,10 @@ export class SpecificationArtifact extends Artifact {
         this.domconfigPath = Path.FromSegments(this.projectRoot, "domconfig.json");
         this.modulePath = Path.FromSegments(this.projectRoot, "src", this.stringFormatter.fileNameCase(this.details.module()));
         this.moduleFilePath = Path.FromSegments(this.modulePath, `${this.stringFormatter.fileNameCase(this.details.module())}.module.ts`);
-        this.moduleSpecificationsDirPath = Path.FromSegments(this.modulePath, "specifications");
-        this.moduleSpecificationsWellFilePath = Path.FromSegments(this.moduleSpecificationsDirPath, "specifications.well.ts");
-        this.specificationPath = Path.FromSegments(this.moduleSpecificationsDirPath, this.details.artifactDirPath());
-        this.specificationClassPath = Path.FromSegments(this.specificationPath, `${this.stringFormatter.fileNameCase(this.details.artifactName())}.specification.ts`);
+        this.moduleCommandsDirPath = Path.FromSegments(this.modulePath, "services");
+        this.moduleCommandsWellFilePath = Path.FromSegments(this.moduleCommandsDirPath, "services.well.ts");
+        this.commandPath = Path.FromSegments(this.moduleCommandsDirPath, this.details.artifactDirPath());
+        this.commandClassPath = Path.FromSegments(this.commandPath, `${this.stringFormatter.fileNameCase(this.details.artifactName())}.command.ts`);
     }
 
     /**
@@ -85,7 +85,7 @@ export class SpecificationArtifact extends Artifact {
 
 
     public directoriesInfo(): Path[] {
-        return [this.specificationPath];
+        return [this.commandPath];
     }
 
     /**
@@ -98,14 +98,14 @@ export class SpecificationArtifact extends Artifact {
         const filesMap = new Map<Path, string>();
 
         // well file.
-        if (!await FileSystem.Contains(this.moduleSpecificationsWellFilePath)) {
+        if (!await FileSystem.Contains(this.moduleCommandsWellFilePath)) {
             const eventsWellFileContent = await this.loadWellContents();
-            filesMap.set(this.moduleSpecificationsWellFilePath, eventsWellFileContent);
+            filesMap.set(this.moduleCommandsWellFilePath, eventsWellFileContent);
         }
 
         // interfaces and classes.
-        const classContent = await this.loadSpecificationContents();
-        filesMap.set(this.specificationClassPath, classContent);
+        const classContent = await this.loadCommandContents();
+        filesMap.set(this.commandClassPath, classContent);
 
         return filesMap;
     }
@@ -120,11 +120,11 @@ export class SpecificationArtifact extends Artifact {
         const exports = new Map<Path, string>();
 
         // export well file to module file.
-        exports.set(this.moduleFilePath, `\nexport * from "./specifications/specification.well";`);
+        exports.set(this.moduleFilePath, `\nexport * from "./services/services.well";`);
 
         // export events files to entities well file.
-        const classContent = `\nexport * from "./${this.details.artifactDirPath() ? this.details.artifactDirPath() + Path.Separator() : ""}${this.stringFormatter.fileNameCase(this.details.artifactName())}.specification";`;
-        exports.set(this.moduleSpecificationsWellFilePath, classContent);
+        const classContent = `\nexport * from "./${this.details.artifactDirPath() ? this.details.artifactDirPath() + Path.Separator() : ""}${this.stringFormatter.fileNameCase(this.details.artifactName())}.command";`;
+        exports.set(this.moduleCommandsWellFilePath, classContent);
 
         return exports;
     }
@@ -153,8 +153,8 @@ export class SpecificationArtifact extends Artifact {
             }
 
             // make sure the event does not already exist.
-            if (await FileSystem.Contains(this.specificationClassPath)) {
-                throw new Error(`Specification '${this.stringFormatter.classNameCase(this.details.artifactName())}Specification' already exists.`);
+            if (await FileSystem.Contains(this.commandClassPath)) {
+                throw new Error(`Command '${this.stringFormatter.classNameCase(this.details.artifactName())}Command' already exists.`);
             }
 
             return null;
@@ -169,19 +169,19 @@ export class SpecificationArtifact extends Artifact {
     // ================================
 
     /**
-     * loadSpecificationContents()
+     * loadCommandContents()
      * 
-     * loads the specification contents.
-     * @returns the specification class contents.
+     * loads the command contents.
+     * @returns the command class contents.
      */
 
-    public async loadSpecificationContents(): Promise<string> {
-        const file = await FileSystem.Open(SpecificationArtifact.SPECIFICATION_PATH, FileOpenFlag.READ, FileOpenMode.READONLY);
+    public async loadCommandContents(): Promise<string> {
+        const file = await FileSystem.Open(CommandArtifact.COMMAND_PATH, FileOpenFlag.READ, FileOpenMode.READONLY);
         const contents = await file.readAll();
         await file.close();
 
         return contents
-            .replace(/__SPECIFICATION_NAME__/g, this.stringFormatter.classNameCase(this.details.artifactName()));
+            .replace(/__COMMAND_NAME__/g, this.stringFormatter.classNameCase(this.details.artifactName()));
     }
 
     /**
@@ -192,9 +192,9 @@ export class SpecificationArtifact extends Artifact {
      */
 
     private async loadWellContents(): Promise<string> {
-        const file = await FileSystem.Open(SpecificationArtifact.WELL_PATH, FileOpenFlag.READ, FileOpenMode.READONLY);
+        const file = await FileSystem.Open(CommandArtifact.WELL_PATH, FileOpenFlag.READ, FileOpenMode.READONLY);
         const content = await file.readAll();
         await file.close();
-        return content.replace(/__WELL_TYPE__/g, "specifications");
+        return content.replace(/__WELL_TYPE__/g, "services");
     }
 }

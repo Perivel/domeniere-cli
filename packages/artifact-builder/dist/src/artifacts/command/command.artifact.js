@@ -1,17 +1,17 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.SpecificationArtifact = void 0;
+exports.CommandArtifact = void 0;
 const filesystem_1 = require("@swindle/filesystem");
 const artifact_1 = require("./../../artifact/artifact");
 const artifact_details_parrser_well_1 = require("./../../artifact-details-parser/artifact-details-parrser.well");
 const formatters_well_1 = require("./../../formatters/formatters.well");
 const validators_well_1 = require("./../../validators/validators.well");
 /**
- * SpecificationArtifact
+ * CommandArtifact
  *
- * An artifact for constructing a Specification.
+ * An artifact for constructing a Command.
  */
-class SpecificationArtifact extends artifact_1.Artifact {
+class CommandArtifact extends artifact_1.Artifact {
     constructor(details, projectRoot) {
         super();
         // utilities
@@ -24,10 +24,10 @@ class SpecificationArtifact extends artifact_1.Artifact {
         this.domconfigPath = filesystem_1.Path.FromSegments(this.projectRoot, "domconfig.json");
         this.modulePath = filesystem_1.Path.FromSegments(this.projectRoot, "src", this.stringFormatter.fileNameCase(this.details.module()));
         this.moduleFilePath = filesystem_1.Path.FromSegments(this.modulePath, `${this.stringFormatter.fileNameCase(this.details.module())}.module.ts`);
-        this.moduleSpecificationsDirPath = filesystem_1.Path.FromSegments(this.modulePath, "specifications");
-        this.moduleSpecificationsWellFilePath = filesystem_1.Path.FromSegments(this.moduleSpecificationsDirPath, "specifications.well.ts");
-        this.specificationPath = filesystem_1.Path.FromSegments(this.moduleSpecificationsDirPath, this.details.artifactDirPath());
-        this.specificationClassPath = filesystem_1.Path.FromSegments(this.specificationPath, `${this.stringFormatter.fileNameCase(this.details.artifactName())}.specification.ts`);
+        this.moduleCommandsDirPath = filesystem_1.Path.FromSegments(this.modulePath, "services");
+        this.moduleCommandsWellFilePath = filesystem_1.Path.FromSegments(this.moduleCommandsDirPath, "services.well.ts");
+        this.commandPath = filesystem_1.Path.FromSegments(this.moduleCommandsDirPath, this.details.artifactDirPath());
+        this.commandClassPath = filesystem_1.Path.FromSegments(this.commandPath, `${this.stringFormatter.fileNameCase(this.details.artifactName())}.command.ts`);
     }
     /**
      * directoriesInfo()
@@ -35,7 +35,7 @@ class SpecificationArtifact extends artifact_1.Artifact {
      * The directories to be created for the artifact.
      */
     directoriesInfo() {
-        return [this.specificationPath];
+        return [this.commandPath];
     }
     /**
      * filesInfo()
@@ -45,13 +45,13 @@ class SpecificationArtifact extends artifact_1.Artifact {
     async filesInfo() {
         const filesMap = new Map();
         // well file.
-        if (!await filesystem_1.FileSystem.Contains(this.moduleSpecificationsWellFilePath)) {
+        if (!await filesystem_1.FileSystem.Contains(this.moduleCommandsWellFilePath)) {
             const eventsWellFileContent = await this.loadWellContents();
-            filesMap.set(this.moduleSpecificationsWellFilePath, eventsWellFileContent);
+            filesMap.set(this.moduleCommandsWellFilePath, eventsWellFileContent);
         }
         // interfaces and classes.
-        const classContent = await this.loadSpecificationContents();
-        filesMap.set(this.specificationClassPath, classContent);
+        const classContent = await this.loadCommandContents();
+        filesMap.set(this.commandClassPath, classContent);
         return filesMap;
     }
     /**
@@ -62,10 +62,10 @@ class SpecificationArtifact extends artifact_1.Artifact {
     async exportsInfo() {
         const exports = new Map();
         // export well file to module file.
-        exports.set(this.moduleFilePath, `\nexport * from "./specifications/specification.well";`);
+        exports.set(this.moduleFilePath, `\nexport * from "./services/services.well";`);
         // export events files to entities well file.
-        const classContent = `\nexport * from "./${this.details.artifactDirPath() ? this.details.artifactDirPath() + filesystem_1.Path.Separator() : ""}${this.stringFormatter.fileNameCase(this.details.artifactName())}.specification";`;
-        exports.set(this.moduleSpecificationsWellFilePath, classContent);
+        const classContent = `\nexport * from "./${this.details.artifactDirPath() ? this.details.artifactDirPath() + filesystem_1.Path.Separator() : ""}${this.stringFormatter.fileNameCase(this.details.artifactName())}.command";`;
+        exports.set(this.moduleCommandsWellFilePath, classContent);
         return exports;
     }
     /**
@@ -88,8 +88,8 @@ class SpecificationArtifact extends artifact_1.Artifact {
                 throw new Error(`Module '${this.stringFormatter.classNameCase(this.details.module())}' does not exist.`);
             }
             // make sure the event does not already exist.
-            if (await filesystem_1.FileSystem.Contains(this.specificationClassPath)) {
-                throw new Error(`Specification '${this.stringFormatter.classNameCase(this.details.artifactName())}Specification' already exists.`);
+            if (await filesystem_1.FileSystem.Contains(this.commandClassPath)) {
+                throw new Error(`Command '${this.stringFormatter.classNameCase(this.details.artifactName())}Command' already exists.`);
             }
             return null;
         }
@@ -101,17 +101,17 @@ class SpecificationArtifact extends artifact_1.Artifact {
     // helpers
     // ================================
     /**
-     * loadSpecificationContents()
+     * loadCommandContents()
      *
-     * loads the specification contents.
-     * @returns the specification class contents.
+     * loads the command contents.
+     * @returns the command class contents.
      */
-    async loadSpecificationContents() {
-        const file = await filesystem_1.FileSystem.Open(SpecificationArtifact.SPECIFICATION_PATH, filesystem_1.FileOpenFlag.READ, filesystem_1.FileOpenMode.READONLY);
+    async loadCommandContents() {
+        const file = await filesystem_1.FileSystem.Open(CommandArtifact.COMMAND_PATH, filesystem_1.FileOpenFlag.READ, filesystem_1.FileOpenMode.READONLY);
         const contents = await file.readAll();
         await file.close();
         return contents
-            .replace(/__SPECIFICATION_NAME__/g, this.stringFormatter.classNameCase(this.details.artifactName()));
+            .replace(/__COMMAND_NAME__/g, this.stringFormatter.classNameCase(this.details.artifactName()));
     }
     /**
      * loadWellContents()
@@ -120,14 +120,14 @@ class SpecificationArtifact extends artifact_1.Artifact {
      * @returns the contents for the exceptions well file.
      */
     async loadWellContents() {
-        const file = await filesystem_1.FileSystem.Open(SpecificationArtifact.WELL_PATH, filesystem_1.FileOpenFlag.READ, filesystem_1.FileOpenMode.READONLY);
+        const file = await filesystem_1.FileSystem.Open(CommandArtifact.WELL_PATH, filesystem_1.FileOpenFlag.READ, filesystem_1.FileOpenMode.READONLY);
         const content = await file.readAll();
         await file.close();
-        return content.replace(/__WELL_TYPE__/g, "specifications");
+        return content.replace(/__WELL_TYPE__/g, "services");
     }
 }
-exports.SpecificationArtifact = SpecificationArtifact;
+exports.CommandArtifact = CommandArtifact;
 // templates
-SpecificationArtifact.WELL_PATH = filesystem_1.Path.FromSegments(__dirname, `..${filesystem_1.Path.Separator()}`, `..${filesystem_1.Path.Separator()}`, `..${filesystem_1.Path.Separator()}`, 'templates', "WELL.template.txt");
-SpecificationArtifact.SPECIFICATION_PATH = filesystem_1.Path.FromSegments(__dirname, `..${filesystem_1.Path.Separator()}`, `..${filesystem_1.Path.Separator()}`, `..${filesystem_1.Path.Separator()}`, 'templates', "SPECIFICATION.template.txt");
-//# sourceMappingURL=specification.artifact.js.map
+CommandArtifact.WELL_PATH = filesystem_1.Path.FromSegments(__dirname, `..${filesystem_1.Path.Separator()}`, `..${filesystem_1.Path.Separator()}`, `..${filesystem_1.Path.Separator()}`, 'templates', "WELL.template.txt");
+CommandArtifact.COMMAND_PATH = filesystem_1.Path.FromSegments(__dirname, `..${filesystem_1.Path.Separator()}`, `..${filesystem_1.Path.Separator()}`, `..${filesystem_1.Path.Separator()}`, 'templates', "COMMAND.template.txt");
+//# sourceMappingURL=command.artifact.js.map

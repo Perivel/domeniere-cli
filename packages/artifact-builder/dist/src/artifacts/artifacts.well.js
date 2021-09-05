@@ -22,4 +22,5 @@ __exportStar(require("./repository/repository.artifact"), exports);
 __exportStar(require("./event/event.artifact"), exports);
 __exportStar(require("./dto/dto.artifact"), exports);
 __exportStar(require("./specification/specification.artifact"), exports);
+__exportStar(require("./command/command.artifact"), exports);
 //# sourceMappingURL=artifacts.well.js.map

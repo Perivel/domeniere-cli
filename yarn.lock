@@ -17,10 +17,10 @@
     semver "^7.3.4"
     tar "^6.1.0"
 
-"@swindle/core@^2.0.1":
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/@swindle/core/-/core-2.0.1.tgz#4d4c1a2996f5ae14a9f9e5a257343047b1ccb25e"
-  integrity sha512-8WlJ4ZLLxdeY7N3cIcn5+w1HSrjVoNB/eES0nMDQCnEiOT2GyM8xdNqkHgoG/PkqKH5p5fIkCy7oBT6+HA7RTA==
+"@swindle/core@^2.1.0":
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/@swindle/core/-/core-2.1.0.tgz#93eec2bc397750dd709cc14fd958bd0e30dc1c1b"
+  integrity sha512-tOkYyvn31Ti2KFXXDZW42vKiFMAm0M2RNhJI746fEB1x3WOK9ECfBwEXOPj2EaWumwpM5vDAin7GDzl39di65Q==
   dependencies:
     "@types/bcrypt" "^5.0.0"
     "@types/luxon" "^1.25.0"
@@ -33,29 +33,29 @@
     typescript "^4.3.5"
     uuid "^8.3.0"
 
-"@swindle/filesystem@1.0.5", "@swindle/filesystem@^1.0.5":
-  version "1.0.5"
-  resolved "https://registry.yarnpkg.com/@swindle/filesystem/-/filesystem-1.0.5.tgz#48d2957a39bc60295dcfc7a59e625840bb382369"
-  integrity sha512-cowBwajVsdPUGvsQmT5Fuy9W3IlOPwUXsBh9G/CiJ31ZzblnF+3ozxXlmOGQCje+LmLQk+Mv7GOFMeYcpWzVwg==
+"@swindle/filesystem@1.0.6", "@swindle/filesystem@^1.0.6":
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/@swindle/filesystem/-/filesystem-1.0.6.tgz#ebab953d979bf2bd6e4d68ec3065f8fa3584e981"
+  integrity sha512-1sbtbZr3IZUex+LMvdzOm8MeW+u+v4jOoIZ98IRV2pDufgik3Gzln+zZ1gpzusPg5gaWAMn3X1s5uzdUnCigrQ==
   dependencies:
-    "@swindle/core" "^2.0.1"
+    "@swindle/core" "^2.1.0"
     "@types/node" "16.7.1"
 
-"@swindle/os@1.0.8", "@swindle/os@^1.0.8":
-  version "1.0.8"
-  resolved "https://registry.yarnpkg.com/@swindle/os/-/os-1.0.8.tgz#0fffcb1fdead8068d841137030a66865f9a52a39"
-  integrity sha512-XsOfF9d1RqQyAyVDPiq3FqEmscFECZDAcdRzoPNfCAl0Tg1Aed/6MyyzxcfbX/gwUQuuJYJ0w4IjX1BQrK8cpQ==
+"@swindle/os@1.0.9", "@swindle/os@^1.0.9":
+  version "1.0.9"
+  resolved "https://registry.yarnpkg.com/@swindle/os/-/os-1.0.9.tgz#f47a45bb5c14fc03ebcaab126c11b2eaa377384b"
+  integrity sha512-LMNoVrDwQu2tTSftjhKjhsOtpWBf6Rs7EXwuJAc1T8kLxOU5qwfYo5rEYabEv2H/7eJn/1xWm+J7AG26uFJdyA==
   dependencies:
-    "@swindle/core" "^2.0.1"
-    "@swindle/filesystem" "^1.0.5"
+    "@swindle/core" "^2.1.0"
+    "@swindle/filesystem" "^1.0.6"
     promisify-child-process "^4.1.1"
 
-"@swindle/structs@^1.0.2":
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/@swindle/structs/-/structs-1.0.2.tgz#65986a37f38a5531255a990d7ffc0ba696388ecd"
-  integrity sha512-zgA4QaQfVHDgNoIMBijl8NWyBb7BKKfzXtA62uKRfEVeIet+kJ2zj2GRMearW7Fs/17uE1qGjP35mv8sFQE5hQ==
+"@swindle/structs@^1.0.4":
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/@swindle/structs/-/structs-1.0.4.tgz#7e870f86d0917aac979d6fce3e7982feb946a6b6"
+  integrity sha512-N95NWRcZCU1Y3dt50PUEpiKuciLxXk7KdMLIk+b2IOn2/J5DgGoQVWSAvlik4iZziPisFFRGmjCLWpMUZnl9Gw==
   dependencies:
-    "@swindle/core" "^2.0.1"
+    "@swindle/core" "^2.1.0"
 
 "@types/bcrypt@^5.0.0":
   version "5.0.0"

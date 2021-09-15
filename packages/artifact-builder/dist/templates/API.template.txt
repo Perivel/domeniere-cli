@@ -1,4 +1,5 @@
-import { Api, Logger, Domain } from 'domeniere';
+import { Api } from '@domeniere/core';
+import { Logger, LoggerDelegate } from '@domeniere/logger';
 import { __DOMAIN_NAME__EventStore } from './__DOMAIN_PATH__.eventstore';
 
 /**
@@ -11,11 +12,12 @@ import { __DOMAIN_NAME__EventStore } from './__DOMAIN_PATH__.eventstore';
 
 export class __DOMAIN_NAME__Api extends Api {
 
-    constructor(eventStore: __DOMAIN_NAME__EventStore, logger: Logger) {
-        super(eventStore, logger);
+    constructor(eventStore: __DOMAIN_NAME__EventStore, loggerDelegate: LoggerDelegate) {
+        super('__DOMAIN_PATH__' ,eventStore);
+        Logger.setDelegate(loggerDelegate);
     }
 
     public helloWorld(): void {
-        Domain.Module().get(Logger).info(__DOMAIN_NAME__Api.name, this.helloWorld.name, "Hello World!", {});
+        Logger.info("Hello World!");
     }
 }

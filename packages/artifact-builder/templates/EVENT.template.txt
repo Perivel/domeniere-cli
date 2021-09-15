@@ -1,5 +1,5 @@
-import { DomainEvent } from 'domeniere';
-import { DateTime, MethodUndefinedException } from 'swindle';
+import { DomainEvent } from 'domeniere/event';
+import { DateTime, MethodUndefinedException } from '@swindle/core';
 
 
 export class __EVENT_CLASS_NAME__ extends DomainEvent {

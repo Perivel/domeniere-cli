@@ -199,5 +199,8 @@ ScaffoldProjectCommand.usage = {
 ScaffoldProjectCommand.PROJECT_DEPENDENCIES = [
     "domeniere",
     "@swindle/core",
-    "@swindle/structs"
+    "@swindle/structs",
+    "@swindle/specification",
+    "@domeniere/core",
+    "@domeniere/common"
 ];

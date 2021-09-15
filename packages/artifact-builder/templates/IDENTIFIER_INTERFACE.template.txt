@@ -1,4 +1,4 @@
-import { Identifier } from 'domeniere';
+import { Identifier } from '@domeniere/value';
 
 
 export interface __NAME__Interface extends Identifier {

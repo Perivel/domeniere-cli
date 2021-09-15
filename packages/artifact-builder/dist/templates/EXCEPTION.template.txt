@@ -1,4 +1,4 @@
-import { BaseException } from 'swindle';
+import { BaseException } from '@swindle/core';
 
 
  export class __EXCEPTION_NAME__Exception extends BaseException {

@@ -49,8 +49,10 @@ export class ScaffoldProjectCommand extends Command {
     private static PROJECT_DEPENDENCIES = [
         "domeniere",
         "@swindle/core",
-        "@swindle/structs"
-
+        "@swindle/structs",
+        "@swindle/specification",
+        "@domeniere/core",
+        "@domeniere/common"
     ];
 
     domainName = Option.String({ required: false, name: "domain-name", validator: t.isString() });

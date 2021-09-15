@@ -1,5 +1,5 @@
-import { Data } from 'domeniere';
-import { MethodUndefinedException } from 'swindle';
+import { Data } from '@domeniere/dto';
+import { MethodUndefinedException } from '@swindle/core';
 
 
 export class __DTO_NAME__Data extends Data {

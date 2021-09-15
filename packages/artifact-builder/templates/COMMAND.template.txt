@@ -1,4 +1,4 @@
-import { Command } from 'domeniere';
+import { Command } from '@domeniere/service';
 
 
 export class __COMMAND_NAME__Command extends Command {

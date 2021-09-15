@@ -1,5 +1,7 @@
-import { Aggregate, Identifier, IdentityGeneratingRepository } from 'domeniere';
-import { MethodUndefinedException } from 'swindle';
+import { IdentityGeneratingRepository } from '@domeniere/repository';
+import { Aggregate } from '@domeniere/aggregate';
+import { Identifier } from '@domeniere/value';
+import { MethodUndefinedException } from '@swindle/core';
 
 
 export abstract class __REPOSITORY_NAME__Repository extends IdentityGeneratingRepository {

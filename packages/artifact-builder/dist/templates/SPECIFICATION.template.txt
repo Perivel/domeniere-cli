@@ -1,5 +1,5 @@
-import { CompositeSpecification } from 'domeniere';
-import { MethodUndefinedException } from 'swindle';
+import { CompositeSpecification } from '@swindle/specification';
+import { MethodUndefinedException } from '@swindle/core';
 
 
 export class __SPECIFICATION_NAME__Specification extends CompositeSpecification {

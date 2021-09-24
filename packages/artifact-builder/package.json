@@ -1,6 +1,6 @@
 {
   "name": "@domeniere/artifact-builder",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Artifact Generators for Domeniere artifacts",
   "main": "dist/index.js",
   "repository": "https://github.com/Perivel/domeniere-cli.git",

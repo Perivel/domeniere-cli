@@ -16,11 +16,13 @@ const scaffold_dto_command_1 = require("./scaffold-dto/scaffold-dto.command");
 const scaffold_specification_command_1 = require("./scaffold-specification/scaffold-specification.command");
 const scaffold_command_command_1 = require("./scaffold-command/scaffold-command.command");
 const scaffold_query_command_1 = require("./scaffold-query/scaffold-query.command");
+const open_docs_command_1 = require("./open-docs/open-docs.command");
 /**
  * Put all the commands you want included in the CLI here.
  */
 exports.commands = [
     default_command_1.DefaultCommand,
+    open_docs_command_1.OpenDocsCommand,
     scaffold_aggregate_command_1.ScaffoldAggregateCommand,
     scaffold_command_command_1.ScaffoldCommandCommand,
     scaffold_dto_command_1.ScaffoldDtoCommand,

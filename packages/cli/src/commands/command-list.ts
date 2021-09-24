@@ -17,6 +17,7 @@ import { ScaffoldDtoCommand } from "./scaffold-dto/scaffold-dto.command";
 import { ScaffoldSpecificationCommand } from "./scaffold-specification/scaffold-specification.command";
 import { ScaffoldCommandCommand } from "./scaffold-command/scaffold-command.command";
 import { ScaffoldQueryCommand } from "./scaffold-query/scaffold-query.command";
+import { OpenDocsCommand } from "./open-docs/open-docs.command";
 
 /**
  * Put all the commands you want included in the CLI here.
@@ -24,6 +25,7 @@ import { ScaffoldQueryCommand } from "./scaffold-query/scaffold-query.command";
 
 export const commands: CommandClass<BaseContext>[] = [
     DefaultCommand,
+    OpenDocsCommand,
     ScaffoldAggregateCommand,
     ScaffoldCommandCommand,
     ScaffoldDtoCommand,

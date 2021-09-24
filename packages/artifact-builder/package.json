@@ -1,12 +1,12 @@
 {
-  "name": "artifact-builder",
+  "name": "@domeniere/artifact-builder",
   "version": "1.0.0",
   "description": "Artifact Generators for Domeniere artifacts",
   "main": "dist/index.js",
   "repository": "https://github.com/Perivel/domeniere-cli.git",
   "author": "Patrick Luy <pluy@perivel.com>",
   "license": "MIT",
-  "private": true,
+  "private": false,
   "dependencies": {
     "@swindle/core": "^2.1.0",
     "@swindle/filesystem": "1.0.6",

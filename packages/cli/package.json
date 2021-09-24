@@ -6,7 +6,7 @@
   "repository": "https://github.com/Perivel/domeniere-cli.git",
   "author": "Patrick Luy <pluy@perivel.com>",
   "license": "MIT",
-  "private": true,
+  "private": false,
   "dependencies": {
     "@swindle/core": "^2.1.0",
     "@swindle/filesystem": "1.0.6",

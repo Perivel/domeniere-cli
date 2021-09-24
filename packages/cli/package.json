@@ -1,8 +1,8 @@
 {
   "name": "@domeniere/cli",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "description": "A command line tool for managing domeniere applications.",
-  "main": "dist/index.js",
+  "main": "dist/cli.js",
   "repository": "https://github.com/Perivel/domeniere-cli.git",
   "author": "Patrick Luy <pluy@perivel.com>",
   "license": "MIT",

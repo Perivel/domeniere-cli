@@ -8,7 +8,7 @@ import {
     ArtifactBuilder,
     DomeniereStringFormatter,
     ModuleArtifact,
-} from "artifact-builder";
+} from "@domeniere/artifact-builder";
 import {
     Spinner,
     MessageFormatter

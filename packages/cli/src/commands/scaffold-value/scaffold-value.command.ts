@@ -1,6 +1,6 @@
 import { Command, Option } from "clipanion";
 import * as t from "typanion";
-import { ArtifactBuilder, DomeniereStringFormatter, ValueArtifact } from "artifact-builder";
+import { ArtifactBuilder, DomeniereStringFormatter, ValueArtifact } from "@domeniere/artifact-builder";
 import { MessageFormatter, Spinner } from "../../utilities/utilities.well";
 import { Process } from "@swindle/os";
 

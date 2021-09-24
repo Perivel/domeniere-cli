@@ -9,7 +9,7 @@ import {
     ArtifactBuilder, 
     PackageManager, 
     ProjectArtifact 
-} from "artifact-builder";
+} from "@domeniere/artifact-builder";
 import { StringFormatter } from "@swindle/core";
 import { 
     FileSystem, 

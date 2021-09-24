@@ -47,7 +47,6 @@ export class ScaffoldProjectCommand extends Command {
      */
 
     private static PROJECT_DEPENDENCIES = [
-        "domeniere",
         "@swindle/core",
         "@swindle/structs",
         "@swindle/specification",

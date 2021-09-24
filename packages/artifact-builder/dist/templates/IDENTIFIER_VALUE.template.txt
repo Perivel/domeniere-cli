@@ -1,4 +1,4 @@
-import { Value } from '@domeniere/valhe';
+import { Value } from '@domeniere/value';
 import { MethodUndefinedException } from '@swindle/core';
 import { __VALUE_NAME__Interface } from './__VALUE_PATH__.interface';
 

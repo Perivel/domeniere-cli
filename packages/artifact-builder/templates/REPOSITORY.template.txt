@@ -1,4 +1,3 @@
-import { Aggregate, Repository } from 'domeniere';
 import { Repository } from '@domeniere/repository';
 import { Aggregate } from '@domeniere/aggregate';
 

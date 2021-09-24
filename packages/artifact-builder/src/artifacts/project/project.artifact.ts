@@ -21,6 +21,7 @@ export class ProjectArtifact extends Artifact {
     private static TSCONFIG_PATH = Path.FromSegments(__dirname, `..${Path.Separator()}`, `..${Path.Separator()}`, `..${Path.Separator()}`, 'templates', "TSCONFIG.template.txt");
     private static EVENTSTORE_PATH = Path.FromSegments(__dirname, `..${Path.Separator()}`, `..${Path.Separator()}`, `..${Path.Separator()}`, 'templates', "EVENTSTORE.template.txt");
     private static API_PATH = Path.FromSegments(__dirname, `..${Path.Separator()}`, `..${Path.Separator()}`, `..${Path.Separator()}`, 'templates', "API.template.txt");
+    private static README_PATH = Path.FromSegments(__dirname, `..${Path.Separator()}`, `..${Path.Separator()}`, `..${Path.Separator()}`, 'templates', "README.template.txt");
 
     private readonly domainName: string;
     private readonly description: string;
@@ -108,6 +109,11 @@ export class ProjectArtifact extends Artifact {
         const tsconfigPath = Path.FromSegments(this.projectRootDirectory, "tsconfig.json");
         const tsconfigContent = await this.loadTsconfigContents();
         fileMap.set(tsconfigPath, tsconfigContent);
+
+        // README
+        const readmePath = Path.FromSegments(this.projectRootDirectory, "README.md");
+        const readmeContent = await this.loadReadmeContents();
+        fileMap.set(readmePath, readmeContent);
 
 
         // ============================
@@ -256,6 +262,22 @@ export class ProjectArtifact extends Artifact {
             .replace(/__DOMAIN_AUTHOR__/g, this.author)
             .replace(/__DOMAIN_REPOSITORY__/g, this.repository ? this.repository.toString() : "")
             .replace(/__DOMAIN_LICENSE__/g, this.license.toUpperCase());
+    }
+
+    /**
+     * loadReadmeContents()
+     * 
+     * loads the README contents.
+     * @returns the README file contents
+     */
+
+    private async loadReadmeContents(): Promise<string> {
+        const file = await FileSystem.Open(ProjectArtifact.README_PATH, FileOpenFlag.READ, FileOpenMode.READONLY);
+        const contents = await file.readAll();
+        await file.close();
+        return contents
+            .replace(/__PROJECT_NAME__/g, this.formatter.fileNameCase(this.domainName))
+            .replace(/__PROJECT_DESCRIPTION__/g, this.description);
     }
 
     /**

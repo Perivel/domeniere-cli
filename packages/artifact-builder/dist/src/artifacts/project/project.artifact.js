@@ -66,6 +66,10 @@ class ProjectArtifact extends artifact_1.Artifact {
         const tsconfigPath = filesystem_1.Path.FromSegments(this.projectRootDirectory, "tsconfig.json");
         const tsconfigContent = await this.loadTsconfigContents();
         fileMap.set(tsconfigPath, tsconfigContent);
+        // README
+        const readmePath = filesystem_1.Path.FromSegments(this.projectRootDirectory, "README.md");
+        const readmeContent = await this.loadReadmeContents();
+        fileMap.set(readmePath, readmeContent);
         // ============================
         // src directory
         // ============================
@@ -191,6 +195,20 @@ class ProjectArtifact extends artifact_1.Artifact {
             .replace(/__DOMAIN_LICENSE__/g, this.license.toUpperCase());
     }
     /**
+     * loadReadmeContents()
+     *
+     * loads the README contents.
+     * @returns the README file contents
+     */
+    async loadReadmeContents() {
+        const file = await filesystem_1.FileSystem.Open(ProjectArtifact.README_PATH, filesystem_1.FileOpenFlag.READ, filesystem_1.FileOpenMode.READONLY);
+        const contents = await file.readAll();
+        await file.close();
+        return contents
+            .replace(/__PROJECT_NAME__/g, this.formatter.fileNameCase(this.domainName))
+            .replace(/__PROJECT_DESCRIPTION__/g, this.description);
+    }
+    /**
      * loadTsconfigContents()
      *
      * loads the tsconfig.json contents
@@ -212,4 +230,5 @@ ProjectArtifact.GITIGNORE_PATH = filesystem_1.Path.FromSegments(__dirname, `..${
 ProjectArtifact.TSCONFIG_PATH = filesystem_1.Path.FromSegments(__dirname, `..${filesystem_1.Path.Separator()}`, `..${filesystem_1.Path.Separator()}`, `..${filesystem_1.Path.Separator()}`, 'templates', "TSCONFIG.template.txt");
 ProjectArtifact.EVENTSTORE_PATH = filesystem_1.Path.FromSegments(__dirname, `..${filesystem_1.Path.Separator()}`, `..${filesystem_1.Path.Separator()}`, `..${filesystem_1.Path.Separator()}`, 'templates', "EVENTSTORE.template.txt");
 ProjectArtifact.API_PATH = filesystem_1.Path.FromSegments(__dirname, `..${filesystem_1.Path.Separator()}`, `..${filesystem_1.Path.Separator()}`, `..${filesystem_1.Path.Separator()}`, 'templates', "API.template.txt");
+ProjectArtifact.README_PATH = filesystem_1.Path.FromSegments(__dirname, `..${filesystem_1.Path.Separator()}`, `..${filesystem_1.Path.Separator()}`, `..${filesystem_1.Path.Separator()}`, 'templates', "README.template.txt");
 //# sourceMappingURL=project.artifact.js.map

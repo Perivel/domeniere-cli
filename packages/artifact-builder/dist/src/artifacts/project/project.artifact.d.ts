@@ -16,6 +16,7 @@ export declare class ProjectArtifact extends Artifact {
     private static TSCONFIG_PATH;
     private static EVENTSTORE_PATH;
     private static API_PATH;
+    private static README_PATH;
     private readonly domainName;
     private readonly description;
     private readonly author;
@@ -95,6 +96,13 @@ export declare class ProjectArtifact extends Artifact {
      * @returns the package.json file contents.
      */
     private loadPackageJsonContents;
+    /**
+     * loadReadmeContents()
+     *
+     * loads the README contents.
+     * @returns the README file contents
+     */
+    private loadReadmeContents;
     /**
      * loadTsconfigContents()
      *
